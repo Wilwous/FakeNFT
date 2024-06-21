@@ -41,6 +41,9 @@
 		3FC8C38B29D242E90081F015 /* ProductDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C38A29D242E90081F015 /* ProductDetailsTableViewCell.swift */; };
 		3FC8C39129D2453B0081F015 /* ExampleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C39029D2453B0081F015 /* ExampleRequest.swift */; };
 		3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */; };
+		7CF285F62C262FFF00AD177D /* Decomposition (Catalog) - Антон Павлов.md in Resources */ = {isa = PBXBuildFile; fileRef = 7CF285F32C262FFF00AD177D /* Decomposition (Catalog) - Антон Павлов.md */; };
+		7CF285F72C262FFF00AD177D /* Decomposition (Profile) - Влад Горелов.md in Resources */ = {isa = PBXBuildFile; fileRef = 7CF285F42C262FFF00AD177D /* Decomposition (Profile) - Влад Горелов.md */; };
+		7CF285F82C262FFF00AD177D /* Decomposition (Cart) - Наташа Труфанова.md in Resources */ = {isa = PBXBuildFile; fileRef = 7CF285F52C262FFF00AD177D /* Decomposition (Cart) - Наташа Труфанова.md */; };
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
@@ -100,6 +103,9 @@
 		3FC8C38A29D242E90081F015 /* ProductDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		3FC8C39029D2453B0081F015 /* ExampleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleRequest.swift; sourceTree = "<group>"; };
 		3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
+		7CF285F32C262FFF00AD177D /* Decomposition (Catalog) - Антон Павлов.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Decomposition (Catalog) - Антон Павлов.md"; path = "../../../../../../../../Desktop/Decomposition (Catalog) - Антон Павлов.md"; sourceTree = "<group>"; };
+		7CF285F42C262FFF00AD177D /* Decomposition (Profile) - Влад Горелов.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Decomposition (Profile) - Влад Горелов.md"; path = "../../../../../../../../Desktop/Decomposition (Profile) - Влад Горелов.md"; sourceTree = "<group>"; };
+		7CF285F52C262FFF00AD177D /* Decomposition (Cart) - Наташа Труфанова.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Decomposition (Cart) - Наташа Труфанова.md"; path = "../../../../../../../../Desktop/Decomposition (Cart) - Наташа Труфанова.md"; sourceTree = "<group>"; };
 		E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E1CD40D92A96BE7D00BE7FE8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -227,6 +233,7 @@
 				3F6806C929CBBCAF00B4F915 /* Models */,
 				3F6806C729CBBC5B00B4F915 /* Scenes  */,
 				3F6806C629CBBC4E00B4F915 /* Services */,
+				7CF285F22C262FBD00AD177D /* Docs */,
 				3F6806A429CBBAF200B4F915 /* Info.plist */,
 			);
 			path = FakeNFT;
@@ -325,6 +332,16 @@
 				0C79EE622A76DD1900EE90EA /* RequestConstants.swift */,
 			);
 			path = Requests;
+			sourceTree = "<group>";
+		};
+		7CF285F22C262FBD00AD177D /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				7CF285F52C262FFF00AD177D /* Decomposition (Cart) - Наташа Труфанова.md */,
+				7CF285F32C262FFF00AD177D /* Decomposition (Catalog) - Антон Павлов.md */,
+				7CF285F42C262FFF00AD177D /* Decomposition (Profile) - Влад Горелов.md */,
+			);
+			path = Docs;
 			sourceTree = "<group>";
 		};
 		E19CD5A92A98B55900CA39A5 /* Cell */ = {
@@ -468,8 +485,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CF285F62C262FFF00AD177D /* Decomposition (Catalog) - Антон Павлов.md in Resources */,
 				3F6806A329CBBAF200B4F915 /* LaunchScreen.storyboard in Resources */,
 				E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */,
+				7CF285F82C262FFF00AD177D /* Decomposition (Cart) - Наташа Труфанова.md in Resources */,
+				7CF285F72C262FFF00AD177D /* Decomposition (Profile) - Влад Горелов.md in Resources */,
 				3F6806A029CBBAF200B4F915 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
