@@ -14,38 +14,50 @@ final class ProfileViewController: UIViewController {
     private var descriptionText = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
     private var userSite: String = "JoaquinPhoenix.com"
 
+    private var textContainer = UIView()
+    private var userProfileContainer = UIView()
+    private var profileTableView = ProfileTableView()
+
     //MARK: - ViewDidLoad
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhiteDay
-        userInfoView()
+        addProfileTableView()
+        setupUserInfoView()
     }
 
     //MARK: - Private Methods
 
-    private func userInfoView() {
-        let userProfileView = userProfileView()
-        let textContainer = descriptionView()
+    private func setupUserInfoView() {
+        userProfileContainer = createUserProfileView()
+        textContainer = createDescriptionView()
 
-        view.addSubview(userProfileView)
+        view.addSubview(userProfileContainer)
         view.addSubview(textContainer)
+        view.addSubview(profileTableView.tableView)
 
-        userProfileView.translatesAutoresizingMaskIntoConstraints = false
+        userProfileContainer.translatesAutoresizingMaskIntoConstraints = false
         textContainer.translatesAutoresizingMaskIntoConstraints = false
+        profileTableView.tableView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            userProfileView.topAnchor.constraint(equalTo: view.topAnchor, constant: 108),
-            userProfileView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            userProfileView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            userProfileContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 108),
+            userProfileContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            userProfileContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            textContainer.topAnchor.constraint(equalTo: userProfileView.bottomAnchor, constant: 20),
+            textContainer.topAnchor.constraint(equalTo: userProfileContainer.bottomAnchor, constant: 20),
             textContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            textContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+            textContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+
+            profileTableView.tableView.topAnchor.constraint(equalTo: textContainer.bottomAnchor, constant: 44),
+            profileTableView.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            profileTableView.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            profileTableView.tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
-    private func userProfileView() -> UIView {
+    private func createUserProfileView() -> UIView {
         let userProfileView = UIView()
 
         let avatarImage = UIImageView()
@@ -76,11 +88,11 @@ final class ProfileViewController: UIViewController {
             userNameLabel.centerYAnchor.constraint(equalTo: avatarImage.centerYAnchor),
             userNameLabel.trailingAnchor.constraint(equalTo: userProfileView.trailingAnchor)
         ])
-        
+
         return userProfileView
     }
 
-    private func descriptionView() -> UIView {
+    private func createDescriptionView() -> UIView {
         let descriptionView = UIView()
 
         let descriptionLabel = UILabel()
@@ -114,5 +126,20 @@ final class ProfileViewController: UIViewController {
         ])
 
         return descriptionView
+    }
+
+    private func addProfileTableView() {
+        profileTableView = ProfileTableView()
+        addChild(profileTableView)
+        view.addSubview(profileTableView.tableView)
+
+        profileTableView.tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            profileTableView.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            profileTableView.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            profileTableView.tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        profileTableView.didMove(toParent: self)
     }
 }

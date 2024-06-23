@@ -39,12 +39,12 @@ final class TabBarController: UITabBarController {
 
     private func setupViewControllers() {
 
-        let profileVC = getVC(
+        let profileVC = UINavigationController(rootViewController: getVC(
             viewController: ProfileViewController(),
             title: "Профиль",
-            image: getImage(named: "profile_no_active", orSystemName: "person.crop.circle")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
+            image: getImage(named: "profile_no_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
             selectedImage: getImage(named: "profile_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
-        )
+        ))
 
         let catalogVC = getVC(
             viewController: CatalogViewController(),
