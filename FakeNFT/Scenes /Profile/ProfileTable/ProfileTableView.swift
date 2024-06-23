@@ -14,7 +14,6 @@ final class ProfileTableView: UITableViewController {
     var myNFTsCount = 112
     var favoritesNFTsCount = 11
 
-    // Вычисляемое свойство для массива items
     private var items: [(String, String?, UIImage)] {
         return [
             ("Мои NFT", "(\(myNFTsCount))", iconImage),
