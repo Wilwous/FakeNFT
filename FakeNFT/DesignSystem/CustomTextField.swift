@@ -57,7 +57,7 @@ final class CustomTextField: UIView {
         textView.isScrollEnabled = false
         textView.textContainerInset = UIEdgeInsets(top: 11, left: 12, bottom: 11, right: 40)
         textView.delegate = self
-        textView.returnKeyType = .done // Добавлено: чтобы отображать клавишу Done
+        textView.returnKeyType = .done
 
         clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         clearButton.tintColor = .gray
@@ -132,7 +132,7 @@ extension CustomTextField: UITextViewDelegate {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" { // Обработка клавиши Return
+        if text == "\n" { 
             textView.resignFirstResponder()
             return false
         }

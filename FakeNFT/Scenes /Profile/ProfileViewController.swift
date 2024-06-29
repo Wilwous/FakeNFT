@@ -64,7 +64,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         let userProfileView = UIView()
 
         let avatarImage = UIImageView()
-        avatarImage.image = userAvatar // 🤡
+        avatarImage.image = userAvatar
         avatarImage.contentMode = .scaleAspectFill
         avatarImage.layer.cornerRadius = 35
         avatarImage.clipsToBounds = true
@@ -194,7 +194,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
 
     // MARK: - EditProfileDelegate
 
-    func didSaveProfile(name: String, avatar: UIImage?, description: String, site: String) { // 🤡
+    func didSaveProfile(name: String, avatar: UIImage?, description: String, site: String) { 
         self.userName = name
         self.userAvatar = avatar
         self.descriptionText = description
