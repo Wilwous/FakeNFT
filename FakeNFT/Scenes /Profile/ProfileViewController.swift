@@ -193,7 +193,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         self.descriptionText = description
         self.userSite = site
 
-        // Update UI
         userProfileContainer.removeFromSuperview()
         textContainer.removeFromSuperview()
         setupUserInfoView()

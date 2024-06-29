@@ -14,6 +14,7 @@ protocol EditProfileDelegate: AnyObject {
 final class EditProfileViewController: UIViewController {
 
     // MARK: - Properties
+
     weak var delegate: EditProfileDelegate?
 
     private var userName: String
@@ -21,14 +22,15 @@ final class EditProfileViewController: UIViewController {
     private var descriptionText: String
     private var userSite: String
 
-    // UI Elements
     private let avatarImageView = UIImageView()
     private let nameTextField = CustomTextField(title: "Имя", placeholder: "Введите имя")
     private let descriptionTextField = CustomTextField(title: "Описание", placeholder: "Введите описание")
     private let siteTextField = CustomTextField(title: "Сайт", placeholder: "Введите сайт")
     private let saveButton = UIButton(type: .system)
+    private let warningLabel = UILabel()
 
     // MARK: - Initializer
+
     init(userName: String, userAvatar: String, descriptionText: String, userSite: String) {
         self.userName = userName
         self.userAvatar = userAvatar
@@ -42,6 +44,7 @@ final class EditProfileViewController: UIViewController {
     }
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -49,10 +52,10 @@ final class EditProfileViewController: UIViewController {
     }
 
     // MARK: - Private Methods
-    private func setupUI() {
-        view.backgroundColor = .white
 
-        // Configure UI elements
+    private func setupUI() {
+        view.backgroundColor = .ypWhiteDay
+
         avatarImageView.image = UIImage(named: userAvatar)
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 35
@@ -62,15 +65,20 @@ final class EditProfileViewController: UIViewController {
         descriptionTextField.text = descriptionText
         siteTextField.text = userSite
 
+        warningLabel.text = ""
+        warningLabel.textColor = .ypRed
+        warningLabel.isHidden = true
+        warningLabel.font = .caption2
+
         saveButton.setTitle("Сохранить", for: .normal)
         saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
 
-        // Add UI elements to view
         view.addSubview(avatarImageView)
         view.addSubview(nameTextField)
         view.addSubview(descriptionTextField)
         view.addSubview(siteTextField)
         view.addSubview(saveButton)
+        view.addSubview(warningLabel)
     }
 
     private func setupConstraints() {
@@ -79,6 +87,7 @@ final class EditProfileViewController: UIViewController {
         descriptionTextField.translatesAutoresizingMaskIntoConstraints = false
         siteTextField.translatesAutoresizingMaskIntoConstraints = false
         saveButton.translatesAutoresizingMaskIntoConstraints = false
+        warningLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 94),
@@ -94,6 +103,10 @@ final class EditProfileViewController: UIViewController {
             descriptionTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             descriptionTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
+            warningLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 8),
+            warningLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            warningLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
             siteTextField.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 24),
             siteTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             siteTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -104,6 +117,16 @@ final class EditProfileViewController: UIViewController {
     }
 
     @objc private func saveTapped() {
+        guard let name = nameTextField.text, !name.isEmpty else {
+            warningLabel.text = "Имя не может быть пустым"
+            warningLabel.isHidden = false
+            nameTextField.setBorder(color: .ypRed, width: 1)  // Установите красную обводку
+            return
+        }
+
+        warningLabel.isHidden = true
+        nameTextField.setBorder(color: .clear, width: 0)  // Уберите обводку, если все хорошо
+
         delegate?.didSaveProfile(name: nameTextField.text ?? "", avatar: "avatar_photo", description: descriptionTextField.text ?? "", site: siteTextField.text ?? "")
         dismiss(animated: true, completion: nil)
     }

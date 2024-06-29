@@ -13,7 +13,10 @@ final class CustomTextField: UIView {
     private let textView = UITextView()
     private let clearButton = UIButton(type: .system)
 
+    private var placeholder: String
+
     init(title: String, placeholder: String) {
+        self.placeholder = placeholder
         super.init(frame: .zero)
         setupUI(title: title, placeholder: placeholder)
         setupConstraints()
@@ -25,19 +28,29 @@ final class CustomTextField: UIView {
     }
 
     var text: String? {
-        get { textView.text }
-        set { textView.text = newValue }
+        get {
+            return textView.text == placeholder ? "" : textView.text
+        }
+        set {
+            textView.text = newValue?.isEmpty ?? true ? placeholder : newValue
+            textView.textColor = newValue?.isEmpty ?? true ? .lightGray : .ypBlackDay
+        }
     }
 
     var textViewInstance: UITextView {
         return textView
     }
 
+    func setBorder(color: UIColor, width: CGFloat) {
+        textView.layer.borderColor = color.cgColor
+        textView.layer.borderWidth = width
+    }
+
     private func setupUI(title: String, placeholder: String) {
         titleLabel.text = title
         titleLabel.font = .bodyBold
         textView.text = placeholder
-        textView.textColor = .ypBlackDay
+        textView.textColor = .lightGray
         textView.backgroundColor = .ypLightGrayDay
         textView.layer.cornerRadius = 12
         textView.font = .bodyRegular
@@ -83,16 +96,26 @@ final class CustomTextField: UIView {
 
     @objc private func clearText() {
         textView.text = ""
-        configureClearButton()
+        textView.textColor = .ypBlackDay
+        clearButton.isHidden = true
+        textView.becomeFirstResponder() 
     }
 }
 
 extension CustomTextField: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == placeholder {
+            textView.text = ""
+            textView.textColor = .ypBlackDay
+        }
         clearButton.isHidden = false
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = placeholder
+            textView.textColor = .ypLightGrayDay
+        }
         clearButton.isHidden = true
     }
 
@@ -107,4 +130,3 @@ extension CustomTextField: UITextViewDelegate {
         clearButton.isHidden = textView.text.isEmpty
     }
 }
-
