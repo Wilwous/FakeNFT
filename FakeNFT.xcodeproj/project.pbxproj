@@ -49,6 +49,8 @@
 		7F973BC02C2B02AE00DCFCD2 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F973BBF2C2B02AE00DCFCD2 /* RatingView.swift */; };
 		7F973BC22C2B02E000DCFCD2 /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F973BC12C2B02E000DCFCD2 /* RatingViewModel.swift */; };
 		8B54AAF72C2FEA6200956DCD /* UserSiteWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54AAF62C2FEA6200956DCD /* UserSiteWebView.swift */; };
+		8B54AAF92C2FEE8900956DCD /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54AAF82C2FEE8900956DCD /* CustomTextField.swift */; };
+		8B54AAFB2C2FEEB200956DCD /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54AAFA2C2FEEB200956DCD /* EditProfileViewController.swift */; };
 		8B5D03692C25BE170096C8A1 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5D03682C25BE170096C8A1 /* ProfileViewController.swift */; };
 		8B5D036B2C25BE6B0096C8A1 /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5D036A2C25BE6B0096C8A1 /* CatalogViewController.swift */; };
 		8B5D036D2C25BEAE0096C8A1 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5D036C2C25BEAE0096C8A1 /* CartViewController.swift */; };
@@ -122,6 +124,8 @@
 		7F973BBF2C2B02AE00DCFCD2 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		7F973BC12C2B02E000DCFCD2 /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
 		8B54AAF62C2FEA6200956DCD /* UserSiteWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSiteWebView.swift; sourceTree = "<group>"; };
+		8B54AAF82C2FEE8900956DCD /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		8B54AAFA2C2FEEB200956DCD /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		8B5D03682C25BE170096C8A1 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		8B5D036A2C25BE6B0096C8A1 /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
 		8B5D036C2C25BEAE0096C8A1 /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
@@ -223,6 +227,7 @@
 			children = (
 				3F478ECE29DB474E00F6D39E /* Colors.swift */,
 				3F478ED029DB476500F6D39E /* Fonts.swift */,
+				8B54AAF82C2FEE8900956DCD /* CustomTextField.swift */,
 			);
 			path = DesignSystem;
 			sourceTree = "<group>";
@@ -394,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				8B5D03682C25BE170096C8A1 /* ProfileViewController.swift */,
+				8B54AAFA2C2FEEB200956DCD /* EditProfileViewController.swift */,
 				8B54AAF62C2FEA6200956DCD /* UserSiteWebView.swift */,
 				8BF698CC2C27419300B168E4 /* ProfileTable */,
 			);
@@ -623,6 +629,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				8BF698CE2C2742E300B168E4 /* ProfileTableView.swift in Sources */,
+				8B54AAF92C2FEE8900956DCD /* CustomTextField.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				7F1F54F82C2AAEE400E8C7C6 /* MockData.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* NftService.swift in Sources */,
@@ -635,6 +642,7 @@
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
 				3FC8C39129D2453B0081F015 /* ExampleRequest.swift in Sources */,
+				8B54AAFB2C2FEEB200956DCD /* EditProfileViewController.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,
 				0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */,
 				3F6806D729CBC50A00B4F915 /* CellsReusingUtils.swift in Sources */,
