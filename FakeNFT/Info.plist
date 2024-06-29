@@ -19,5 +19,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Мы хотим получить доступ к вашей фотогалерее для установки аватара</string>
 </dict>
 </plist>

@@ -12,7 +12,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
     //MARK: - Properties
 
     private var userName: String = "Joaquin Phoenix"
-    private var userAvatar = "avatar_photo"
+    private var userAvatar: UIImage? = UIImage(named: "avatar_photo")
     private var descriptionText = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
     private var userSite: String = "google.com"
 
@@ -64,7 +64,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         let userProfileView = UIView()
 
         let avatarImage = UIImageView()
-        avatarImage.image = UIImage(named: userAvatar)
+        avatarImage.image = userAvatar // 🤡
         avatarImage.contentMode = .scaleAspectFill
         avatarImage.layer.cornerRadius = 35
         avatarImage.clipsToBounds = true
@@ -179,7 +179,14 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
     }
 
     @objc private func didTapEditButton() {
-        let editVC = EditProfileViewController(userName: userName, userAvatar: userAvatar, descriptionText: descriptionText, userSite: userSite)
+        
+        let editVC = EditProfileViewController(
+            userName: userName,
+            userAvatar: userAvatar,
+            descriptionText: descriptionText,
+            userSite: userSite
+        )
+
         editVC.delegate = self
         let navController = UINavigationController(rootViewController: editVC)
         present(navController, animated: true, completion: nil)
@@ -187,7 +194,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
 
     // MARK: - EditProfileDelegate
 
-    func didSaveProfile(name: String, avatar: String, description: String, site: String) {
+    func didSaveProfile(name: String, avatar: UIImage?, description: String, site: String) { // 🤡
         self.userName = name
         self.userAvatar = avatar
         self.descriptionText = description
