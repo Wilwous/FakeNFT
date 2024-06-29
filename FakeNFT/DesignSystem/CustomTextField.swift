@@ -57,6 +57,7 @@ final class CustomTextField: UIView {
         textView.isScrollEnabled = false
         textView.textContainerInset = UIEdgeInsets(top: 11, left: 12, bottom: 11, right: 40)
         textView.delegate = self
+        textView.returnKeyType = .done // Добавлено: чтобы отображать клавишу Done
 
         clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         clearButton.tintColor = .gray
@@ -98,7 +99,7 @@ final class CustomTextField: UIView {
         textView.text = ""
         textView.textColor = .ypBlackDay
         clearButton.isHidden = true
-        textView.becomeFirstResponder() 
+        textView.becomeFirstResponder()
     }
 }
 
@@ -114,7 +115,7 @@ extension CustomTextField: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeholder
-            textView.textColor = .ypLightGrayDay
+            textView.textColor = .lightGray
         }
         clearButton.isHidden = true
     }
@@ -128,5 +129,13 @@ extension CustomTextField: UITextViewDelegate {
             }
         }
         clearButton.isHidden = textView.text.isEmpty
+    }
+
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" { // Обработка клавиши Return
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
     }
 }
