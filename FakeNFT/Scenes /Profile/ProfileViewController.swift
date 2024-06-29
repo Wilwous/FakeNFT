@@ -14,8 +14,8 @@ final class ProfileViewController: UIViewController {
     private var userName: String = "Joaquin Phoenix"
     private var userAvatar = "avatar_photo"
     private var descriptionText = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
-    private var userSite: String = "JoaquinPhoenix.com"
-    
+    private var userSite: String = "ya.ru"
+
     private var textContainer = UIView()
     private var userProfileContainer = UIView()
     private var profileTableView = ProfileTableView()
@@ -109,7 +109,11 @@ final class ProfileViewController: UIViewController {
         userSiteLabel.font = .caption1
         userSiteLabel.textColor = .ypBlue
         userSiteLabel.numberOfLines = 1
-        
+        userSiteLabel.isUserInteractionEnabled = true  // Важно для приема касаний
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSiteTap))
+        userSiteLabel.addGestureRecognizer(tapGesture)
+
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         userSiteLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -156,7 +160,24 @@ final class ProfileViewController: UIViewController {
         rightBarItem.tintColor = .ypBlackDay
         navigationItem.rightBarButtonItem = rightBarItem
     }
-    
+
+    @objc func handleSiteTap() {
+        let formattedURL = formatUrl(userSite)
+        let webViewController = WebViewController()
+        webViewController.targetURL = formattedURL
+        let navController = UINavigationController(rootViewController: webViewController)
+        navController.modalPresentationStyle = .fullScreen // Задаем полноэкранный стиль
+
+        present(navController, animated: true, completion: nil)
+    }
+
+    private func formatUrl(_ url: String) -> String {
+        if !url.lowercased().starts(with: "http://") && !url.lowercased().starts(with: "https://") {
+            return "https://" + url
+        }
+        return url
+    }
+
     @objc private func didTapEditButton() {
         // TODO: логика для редактирования
     }
