@@ -28,6 +28,16 @@ final class ProfileTableView: UITableViewController {
         tableView.rowHeight = 54
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .ypWhiteDay
+    }
+
+    private func rightToLeftTransition() {
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.type = .push
+        transition.subtype = .fromRight
+        view.window!.layer.add(transition, forKey: kCATransition)
     }
 
     // MARK: - Table view data source
@@ -47,5 +57,24 @@ final class ProfileTableView: UITableViewController {
         let item = items[indexPath.row]
         cell.configure(mainText: item.0, secondaryText: item.1, icon: item.2)
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if indexPath.row == 0 {
+            let usersNFTsVC = UsersNFTsViewController()
+            let navController = UINavigationController(rootViewController: usersNFTsVC)
+            navController.modalPresentationStyle = .fullScreen
+            rightToLeftTransition()
+            present(navController, animated: false, completion: nil)
+        }
+
+        if indexPath.row == 1 {
+            let usersNFTsVC = FavoritesNFTsViewController()
+            let navController = UINavigationController(rootViewController: usersNFTsVC)
+            navController.modalPresentationStyle = .fullScreen
+            rightToLeftTransition()
+            present(navController, animated: false, completion: nil)
+        }
     }
 }

@@ -77,7 +77,7 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     func setupNavigationBar() {
         let backIcon = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backIcon, style: .plain, target: self, action: #selector(backTapped))
-        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem?.tintColor = .ypBlackDay
     }
 
     @objc func backTapped() {
