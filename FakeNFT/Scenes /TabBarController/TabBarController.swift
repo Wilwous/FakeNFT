@@ -47,7 +47,7 @@ final class TabBarController: UITabBarController {
         ))
 
         let catalogVC = UINavigationController(rootViewController: getVC(
-            viewController: CatalogViewController(),
+            viewController: CatalogViewController(viewModel: CatalogViewModel(service: CatalogService(networkClient: DefaultNetworkClient()))),
             title: "Каталог",
             image: getImage(named: "catalog_no_active", orSystemName: "square.stack.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
             selectedImage: getImage(named: "catalog_active", orSystemName: "square.stack.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
