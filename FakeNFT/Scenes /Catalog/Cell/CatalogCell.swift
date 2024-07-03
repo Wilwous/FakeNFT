@@ -10,10 +10,6 @@ import Kingfisher
 
 final class CatalogCell: UITableViewCell {
     
-    // MARK: - Identifier
-    
-    static let identifier = "CatalogCell"
-    
     // MARK: - UI Components
     
     private lazy var catalogImage: UIImageView = {

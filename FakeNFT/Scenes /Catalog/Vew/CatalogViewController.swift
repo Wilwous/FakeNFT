@@ -16,6 +16,8 @@ final class CatalogViewController: UIViewController, LoadingView {
     // MARK: - Private Properties
     
     private var viewModel: CatalogViewModelProtocol
+    private let identifier = Constants.identifier
+    private var currentSortState: SortState = .quantity
     
     // MARK: - UI Components
     
@@ -43,7 +45,7 @@ final class CatalogViewController: UIViewController, LoadingView {
         tableView.showsVerticalScrollIndicator = false
         tableView.register(
             CatalogCell.self,
-            forCellReuseIdentifier: CatalogCell.identifier
+            forCellReuseIdentifier: identifier
         )
         
         return tableView
@@ -54,7 +56,6 @@ final class CatalogViewController: UIViewController, LoadingView {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhiteDay
-        print("CatalogViewController loaded")
         bildViewModel()
         viewModel.fetchCollections()
         setupNavigationItem()
@@ -80,14 +81,14 @@ final class CatalogViewController: UIViewController, LoadingView {
         }
         
         viewModel.showLoadingHandler = { [weak self] in
-              guard let self = self else {return}
-              self.showLoading()
-          }
-
+            guard let self = self else {return}
+            self.showLoading()
+        }
+        
         viewModel.hideLoadingHandler = { [weak self] in
-              guard let self = self else {return}
-              self.hideLoading()
-          }
+            guard let self = self else {return}
+            self.hideLoading()
+        }
     }
     
     // MARK: - Setup View
@@ -141,7 +142,19 @@ final class CatalogViewController: UIViewController, LoadingView {
     // MARK: - Action
     
     @objc func sortMenuButton() {
-        // TODO: Логика сортировки
+        let model = AlertModel(
+            message: Constants.filterAlertTitle,
+            nameSortText: Constants.filetNameButtonTitle,
+            quantitySortText: Constants.filterQuantityButtonTitle,
+            cancelButtonText: Constants.closeAlertButtonTitle) { [weak self] in
+                guard let self = self else { return }
+                viewModel.sortCatalogByName()
+            } sortQuantityCompletion: { [weak self] in
+                guard let self = self else { return }
+                viewModel.sortCatalogByQuantity()
+            }
+        
+        AlertPresenter.show(in: self, model: model)
     }
 }
 
@@ -171,7 +184,7 @@ extension CatalogViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CatalogCell.identifier,
+            withIdentifier: identifier,
             for: indexPath
         ) as? CatalogCell else {
             return UITableViewCell()
