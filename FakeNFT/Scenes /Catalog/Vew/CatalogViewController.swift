@@ -7,7 +7,11 @@
 
 import UIKit
 
-final class CatalogViewController: UIViewController {
+final class CatalogViewController: UIViewController, LoadingView {
+    
+    // MARK: - Publice Properties
+    
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Private Properties
     
@@ -74,12 +78,23 @@ final class CatalogViewController: UIViewController {
             guard let self = self else {return}
             self.tableView.reloadData()
         }
+        
+        viewModel.showLoadingHandler = { [weak self] in
+              guard let self = self else {return}
+              self.showLoading()
+          }
+
+        viewModel.hideLoadingHandler = { [weak self] in
+              guard let self = self else {return}
+              self.hideLoading()
+          }
     }
     
     // MARK: - Setup View
     
     private func addElements() {
-        [tableView
+        [tableView,
+         activityIndicator
         ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -103,6 +118,14 @@ final class CatalogViewController: UIViewController {
                 ),
                 tableView.bottomAnchor.constraint(
                     equalTo: view.bottomAnchor
+                ),
+                
+                activityIndicator.centerXAnchor.constraint(
+                    equalTo: view.centerXAnchor
+                ),
+                
+                activityIndicator.centerYAnchor.constraint(
+                    equalTo: view.centerYAnchor
                 )
             ]
         )

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ProgressHUD
 
 // MARK: - Protocol
 
@@ -14,11 +15,18 @@ protocol CatalogViewModelProtocol {
     var collections: [CollectionViewModel] { get }
     var service: CatalogService? { get set }
     func fetchCollections()
+    var showLoadingHandler: (() -> ())? { get set }
+    var hideLoadingHandler: (() -> ())? { get set }
 }
 
 // MARK: - ViewModel
 
 final class CatalogViewModel: CatalogViewModelProtocol {
+    
+    // MARK: - Сlosure
+    
+    var showLoadingHandler: (() -> ())?
+    var hideLoadingHandler: (() -> ())?
     
     // MARK: - Public Properties
     
@@ -48,6 +56,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
         }
         
         let convertedCollections: [CollectionViewModel] = []
+        showLoadingHandler?()
         service.getCollections { [weak self] result in
             switch result {
             case .success(let nftCollectionsResult):
@@ -57,7 +66,9 @@ final class CatalogViewModel: CatalogViewModelProtocol {
                     )
                 }
                 self?.collections = viewModels
+                self?.hideLoadingHandler?()
             case .failure(let error):
+                self?.hideLoadingHandler?()
                 print("Error fetching collections: \(error)")
             }
         }
