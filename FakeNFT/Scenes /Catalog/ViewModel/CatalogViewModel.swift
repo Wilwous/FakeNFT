@@ -17,9 +17,8 @@ protocol CatalogViewModelProtocol {
     func fetchCollections()
     var showLoadingHandler: (() -> ())? { get set }
     var hideLoadingHandler: (() -> ())? { get set }
-    func sortCatalogByName()
-    func sortCatalogByQuantity()
-    func sortCatalog()
+    func updateSorter(newSorting: SortState)
+    func sorterCollections(collectionsToSort: [CollectionViewModel]) -> [CollectionViewModel]
 }
 
 // MARK: - ViewModel
@@ -35,78 +34,100 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     
     var collectionsBinding: Binding<[CollectionViewModel]>?
     var service: CatalogService?
-    var catalog: [NftCollection] = []
     
     // MARK: - Private Properties
     
-    private(set)var sort: SortState?
+    private let sorterStorage = CatalogSorterStorage.shared
+    
+    private(
+        set
+    ) var collections: [CollectionViewModel] = [] {
+        didSet {
+            collectionsBinding?(
+                collections
+            )
+        }
+    }
     
     // MARK: - Initializer
     
     init(service: CatalogService) {
         self.service = service
-        self.sort = SortState(
-            rawValue: CatalogSorterStorage.shared.sorterDescriptor ??
-            SortState.quantity.rawValue
-        )
-    }
-    
-    // MARK: - Private Properties
-    
-    private(set) var collections: [CollectionViewModel] = [] {
-        didSet {
-            collectionsBinding?(collections)
-        }
     }
     
     //MARK: - Public methods
     
-    func sortCatalog() {
-        switch sort {
-        case .name:
-            sortCatalogByName()
-        case .quantity:
-            sortCatalogByQuantity()
-        default:
-            sortCatalogByQuantity()
-        }
-    }
-    
-    func sortCatalogByName() {
-        catalog.sort { $0.name < $1.name }
-        updateCollections()
-        CatalogSorterStorage.shared.sorterDescriptor = SortState.name.rawValue
-    }
-    
-    func sortCatalogByQuantity() {
-        catalog.sort { $0.nfts.count > $1.nfts.count }
-        updateCollections()
-        CatalogSorterStorage.shared.sorterDescriptor = SortState.quantity.rawValue
+    func updateSorter(
+        newSorting: SortState
+    ) {
+        sorterStorage.sorterDescriptor = newSorting.rawValue
+        collections = sorterCollections(
+            collectionsToSort: collections
+        )
     }
     
     func fetchCollections() {
         guard let service = service else {
-            print("Service not set")
+            print(
+                "Service not set"
+            )
             return
         }
         
         showLoadingHandler?()
         service.getCollections { [weak self] result in
+            guard let self = self else {
+                return
+            }
             switch result {
-            case .success(let nftCollectionsResult):
-                self?.catalog = nftCollectionsResult
-                self?.sortCatalog()
-                self?.hideLoadingHandler?()
-            case .failure(let error):
-                self?.hideLoadingHandler?()
-                print("Error fetching collections: \(error)")
+            case .success(
+                let nftCollectionsResult
+            ):
+                let convertedCollections = nftCollectionsResult.map { collection in
+                    CollectionViewModel(
+                        nftCollection: NftCollection(
+                            id: collection.id,
+                            nfts: collection.nfts,
+                            name: collection.name,
+                            cover: collection.cover
+                        )
+                    )
+                }
+                self.collections = self.sorterCollections(
+                    collectionsToSort: convertedCollections
+                )
+                self.hideLoadingHandler?()
+            case .failure(
+                let error
+            ):
+                self.hideLoadingHandler?()
+                print(
+                    "Error fetching collections: \(error)"
+                )
             }
         }
     }
     
-    // MARK: - Private Methods
-    
-    private func updateCollections() {
-        self.collections = catalog.map { CollectionViewModel(nftCollection: $0) }
+    func sorterCollections(
+        collectionsToSort: [CollectionViewModel]
+    ) -> [CollectionViewModel] {
+        guard let sortingRawValue = sorterStorage.sorterDescriptor, let sorting = SortState(
+            rawValue: sortingRawValue
+        ) else {
+            return collectionsToSort
+        }
+        
+        var sortedCollections: [CollectionViewModel] = collectionsToSort
+        switch sorting {
+        case .name:
+            sortedCollections.sort {
+                $0.nftCollection.name < $1.nftCollection.name
+            }
+        case .quantity:
+            sortedCollections.sort {
+                $0.nftCollection.nfts.count > $1.nftCollection.nfts.count
+            }
+        }
+        return sortedCollections
     }
 }

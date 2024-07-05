@@ -21,7 +21,7 @@ final class CollectionViewModel {
     
     // MARK: - Private Properties
     
-    private let nftCollection: NftCollection
+    let nftCollection: NftCollection
     
     // MARK: - Initializer
     

@@ -13,7 +13,6 @@ struct Constants {
     
     //MARK: - CatalogViewController
     
-    static let identifier = "CatalogCell"
     static let filterAlertTitle = "Сортировка"
     static let filetNameButtonTitle = "По названию"
     static let filterQuantityButtonTitle = "По количеству NFT"

@@ -16,7 +16,6 @@ final class CatalogViewController: UIViewController, LoadingView {
     // MARK: - Private Properties
     
     private var viewModel: CatalogViewModelProtocol
-    private let identifier = Constants.identifier
     private var currentSortState: SortState = .quantity
     
     // MARK: - UI Components
@@ -45,7 +44,7 @@ final class CatalogViewController: UIViewController, LoadingView {
         tableView.showsVerticalScrollIndicator = false
         tableView.register(
             CatalogCell.self,
-            forCellReuseIdentifier: identifier
+            forCellReuseIdentifier: CatalogCell.identifier
         )
         
         return tableView
@@ -56,8 +55,7 @@ final class CatalogViewController: UIViewController, LoadingView {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhiteDay
-        bildViewModel()
-        viewModel.fetchCollections()
+        bindViewModel()
         setupNavigationItem()
         addElements()
         layoutConstraint()
@@ -74,21 +72,22 @@ final class CatalogViewController: UIViewController, LoadingView {
     
     // MARK: - ViewModel Binding
     
-    private func bildViewModel() {
+    private func bindViewModel() {
         viewModel.collectionsBinding = { [weak self] _ in
-            guard let self = self else {return}
+            guard let self = self else { return }
             self.tableView.reloadData()
         }
         
         viewModel.showLoadingHandler = { [weak self] in
-            guard let self = self else {return}
+            guard let self = self else { return }
             self.showLoading()
         }
         
         viewModel.hideLoadingHandler = { [weak self] in
-            guard let self = self else {return}
+            guard let self = self else { return }
             self.hideLoading()
         }
+        viewModel.fetchCollections()
     }
     
     // MARK: - Setup View
@@ -146,15 +145,27 @@ final class CatalogViewController: UIViewController, LoadingView {
             message: Constants.filterAlertTitle,
             nameSortText: Constants.filetNameButtonTitle,
             quantitySortText: Constants.filterQuantityButtonTitle,
-            cancelButtonText: Constants.closeAlertButtonTitle) { [weak self] in
-                guard let self = self else { return }
-                viewModel.sortCatalogByName()
-            } sortQuantityCompletion: { [weak self] in
-                guard let self = self else { return }
-                viewModel.sortCatalogByQuantity()
+            cancelButtonText: Constants.closeAlertButtonTitle
+        ) { [weak self] in
+            guard let self = self else {
+                return
             }
+            self.viewModel.updateSorter(
+                newSorting: .name
+            )
+        } sortQuantityCompletion: { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.viewModel.updateSorter(
+                newSorting: .quantity
+            )
+        }
         
-        AlertPresenter.show(in: self, model: model)
+        AlertPresenter.show(
+            in: self,
+            model: model
+        )
     }
 }
 
@@ -165,7 +176,7 @@ extension CatalogViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        return 187
+        return CatalogCell.height
     }
 }
 
@@ -184,14 +195,15 @@ extension CatalogViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: identifier,
+            withIdentifier: CatalogCell.identifier,
             for: indexPath
         ) as? CatalogCell else {
             return UITableViewCell()
         }
-        cell.prepareForReuse()
-        cell.selectionStyle = .none
+        
         let collectionViewModel = viewModel.collections[indexPath.row]
+        
+        cell.prepareForReuse()
         cell.configure(with: collectionViewModel)
         
         return cell

@@ -10,6 +10,11 @@ import Kingfisher
 
 final class CatalogCell: UITableViewCell {
     
+    // MARK: - Static Properties
+    
+    static let identifier = "CatalogCell"
+    static let height: CGFloat = 187
+    
     // MARK: - UI Components
     
     private lazy var catalogImage: UIImageView = {
@@ -41,6 +46,7 @@ final class CatalogCell: UITableViewCell {
             reuseIdentifier: reuseIdentifier
         )
         self.backgroundColor = .ypWhite
+        self.selectionStyle = .none
         addElements()
         layoutConstraint()
     }
