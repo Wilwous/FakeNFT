@@ -10,6 +10,7 @@ import UIKit
 final class UsersNFTsViewController: UIViewController {
 
     // MARK: - Properties
+
     private let noNFTLabel: UILabel = {
         let label = UILabel()
         label.text = "У Вас ещё нет NFT"
@@ -19,11 +20,15 @@ final class UsersNFTsViewController: UIViewController {
         return label
     }()
 
+    private let nftsTableView = UsersNTFsTableView()
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         setupUI()
         setupConstraints()
+        loadNFTs()
     }
 
     // MARK: - Setup Navigation Bar
@@ -73,16 +78,30 @@ final class UsersNFTsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .ypWhiteDay
         view.addSubview(noNFTLabel)
+        view.addSubview(nftsTableView)
     }
 
     // MARK: - Setup Constraints
 
     private func setupConstraints() {
         noNFTLabel.translatesAutoresizingMaskIntoConstraints = false
+        nftsTableView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             noNFTLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            nftsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 14),
+            nftsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            nftsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            nftsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
+    private func loadNFTs() {
+          nftsTableView.nfts = UsersNFTsMockData.nfts
+          nftsTableView.reloadData()
+
+          noNFTLabel.isHidden = !nftsTableView.nfts.isEmpty
+      }
 }

@@ -85,8 +85,8 @@ final class EditProfileViewController: UIViewController, UIImagePickerController
         warningLabel.isHidden = true
         warningLabel.font = .caption2
 
-        closeButton.setImage(UIImage(named: "close_x"), for: .normal)
-        closeButton.tintColor = .ypBlack
+        let closeImage = UIImage(named: "close_x")?.withTintColor(.ypBlackDay, renderingMode: .alwaysOriginal)
+        closeButton.setImage(closeImage, for: .normal)
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
 
         view.addSubview(avatarImageView)
@@ -189,7 +189,7 @@ final class EditProfileViewController: UIViewController, UIImagePickerController
         delegate?.didSaveProfile(name: name, avatar: avatarImageView.image, description: descriptionTextField.text ?? "", site: siteTextField.text ?? "")
         dismiss(animated: true, completion: nil)
     }
-
+    
     @objc private func closeTapped() {
         saveProfile()
     }
