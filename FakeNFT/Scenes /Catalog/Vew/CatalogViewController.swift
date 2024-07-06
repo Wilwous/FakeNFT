@@ -61,6 +61,8 @@ final class CatalogViewController: UIViewController, LoadingView {
         layoutConstraint()
     }
     
+    // MARK: - Initializers
+    
     init(viewModel: CatalogViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -75,7 +77,7 @@ final class CatalogViewController: UIViewController, LoadingView {
     private func bindViewModel() {
         viewModel.collectionsBinding = { [weak self] _ in
             guard let self = self else { return }
-            self.tableView.reloadData()
+            self.updateTableView()
         }
         
         viewModel.showLoadingHandler = { [weak self] in
@@ -88,6 +90,24 @@ final class CatalogViewController: UIViewController, LoadingView {
             self.hideLoading()
         }
         viewModel.fetchCollections()
+    }
+    
+    // MARK: Private Methods
+    
+    private func setupNavigationItem() {
+        navigationItem.rightBarButtonItem = sortButton
+        sortButton.tintColor = .ypBlackDay
+    }
+    
+    private func updateTableView() {
+        tableView.beginUpdates()
+        tableView.reloadSections(
+            IndexSet(
+                integer: 0
+            ),
+            with: .automatic
+        )
+        tableView.endUpdates()
     }
     
     // MARK: - Setup View
@@ -129,13 +149,6 @@ final class CatalogViewController: UIViewController, LoadingView {
                 )
             ]
         )
-    }
-    
-    // MARK: Private Methods
-    
-    private func setupNavigationItem() {
-        navigationItem.rightBarButtonItem = sortButton
-        sortButton.tintColor = .ypBlackDay
     }
     
     // MARK: - Action

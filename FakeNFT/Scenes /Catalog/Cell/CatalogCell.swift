@@ -35,6 +35,15 @@ final class CatalogCell: UITableViewCell {
         return label
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(
+            style: .medium
+        )
+        indicator.hidesWhenStopped = true
+        
+        return indicator
+    }()
+    
     // MARK: - Initializers
     
     override init(
@@ -55,39 +64,50 @@ final class CatalogCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         catalogImage.kf.cancelDownloadTask()
+        activityIndicator.stopAnimating()
     }
     
-    func configure(with viewModel: CollectionViewModel) {
+    // MARK: - Public Methods
+    
+    func configure(
+        with viewModel: CollectionViewModel
+    ) {
         catalogLabel.text = viewModel.name
-        loadImage(from: viewModel.coverURL)
+        loadImage(
+            from: viewModel.coverURL
+        )
     }
+    
+    // MARK: - Private Methods
     
     private func loadImage(from urlString: String) {
         guard let url = URL(string: urlString) else {
             catalogImage.image = UIImage(named: "placeholder")
             return
         }
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self, let data = data, let image = UIImage(data: data) else {
-                DispatchQueue.main.async {
-                    self?.catalogImage.image = UIImage(named: "placeholder")
-                }
-                return
-            }
+        activityIndicator.startAnimating()
+        catalogImage.kf.setImage(with: url) { [weak self] result in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                self.catalogImage.image = image
+                self.activityIndicator.stopAnimating()
+                if case .failure = result {
+                    self.catalogImage.image = UIImage(named: "placeholder")
+                }
             }
-        }.resume()
+        }
     }
     
     // MARK: - Setup View
     
     private func addElements() {
         [catalogLabel,
-         catalogImage
+         catalogImage,
+         activityIndicator
         ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
@@ -116,6 +136,14 @@ final class CatalogCell: UITableViewCell {
                 ),
                 catalogLabel.leadingAnchor.constraint(
                     equalTo: contentView.leadingAnchor
+                ),
+                
+                activityIndicator.centerXAnchor.constraint(
+                    equalTo: catalogImage.centerXAnchor
+                ),
+                
+                activityIndicator.centerYAnchor.constraint(
+                    equalTo: catalogImage.centerYAnchor
                 )
             ]
         )

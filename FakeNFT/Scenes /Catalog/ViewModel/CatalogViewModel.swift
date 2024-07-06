@@ -64,6 +64,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
         collections = sorterCollections(
             collectionsToSort: collections
         )
+        collectionsBinding?(collections)
     }
     
     func fetchCollections() {
@@ -111,9 +112,10 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     func sorterCollections(
         collectionsToSort: [CollectionViewModel]
     ) -> [CollectionViewModel] {
-        guard let sortingRawValue = sorterStorage.sorterDescriptor, let sorting = SortState(
-            rawValue: sortingRawValue
-        ) else {
+        guard let sortingRawValue = sorterStorage.sorterDescriptor,
+              let sorting = SortState(
+                rawValue: sortingRawValue
+              ) else {
             return collectionsToSort
         }
         
