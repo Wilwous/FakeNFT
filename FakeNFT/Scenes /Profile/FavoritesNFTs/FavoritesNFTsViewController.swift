@@ -5,12 +5,12 @@
 //  Created by Владислав Горелов on 30.06.2024.
 //
 
-// FavoritesNFTsViewController.swift
 import UIKit
 
 final class FavoritesNFTsViewController: UIViewController, FavoritesNFTsCollectionViewDelegate {
 
     // MARK: - Properties
+    
     private let noNFTLabel: UILabel = {
         let label = UILabel()
         label.text = "У Вас ещё нет избранных NFT"

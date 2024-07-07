@@ -40,6 +40,7 @@ final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewD
         }
         tableView.backgroundColor = .ypWhiteDay
         cell.backgroundColor = .ypWhiteDay
+        cell.selectionStyle = .none 
         let nft = nfts[indexPath.row]
         cell.configure(with: nft)
         return cell
