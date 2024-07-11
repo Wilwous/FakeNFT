@@ -8,17 +8,82 @@
 import Foundation
 
 struct URLNetworkRequest: NetworkRequest {
-    var endpoint: URL?
-    var httpMethod: HttpMethod
-    var dto: Encodable?
-    var isUrlEncoded: Bool
-    var token: String?
+    let endpoint: URL?
+    let httpMethod: HttpMethod
+    let dto: Encodable?
+    let isUrlEncoded: Bool
+    let token: String?
     
-    init(endpoint: URL?, httpMethod: HttpMethod, dto: Encodable? = nil, isUrlEncoded: Bool = false, token: String? = nil) {
+    init(
+        endpoint: URL?,
+        httpMethod: HttpMethod,
+        dto: Encodable? = nil,
+        isUrlEncoded: Bool = false,
+        token: String? = nil
+    ) {
         self.endpoint = endpoint
         self.httpMethod = httpMethod
         self.dto = dto
         self.isUrlEncoded = isUrlEncoded
         self.token = token ?? TokenManager.shared.token
+    }
+    
+    func update(
+        endpoint: URL?
+    ) -> Self {
+        .init(
+            endpoint: endpoint,
+            httpMethod: httpMethod,
+            dto: dto,
+            isUrlEncoded: isUrlEncoded,
+            token: token
+        )
+    }
+    
+    func update(
+        httpMethod: HttpMethod
+    ) -> Self {
+        .init(
+            endpoint: endpoint,
+            httpMethod: httpMethod,
+            dto: dto,
+            isUrlEncoded: isUrlEncoded,
+            token: token
+        )
+    }
+    
+    func update(
+        dto: Encodable?
+    ) -> Self {
+        .init(
+            endpoint: endpoint,
+            httpMethod: httpMethod,
+            dto: dto,
+            isUrlEncoded: isUrlEncoded,
+            token: token
+        )
+    }
+    
+    func update(
+        isUrlEncoded: Bool
+    ) -> Self {
+        .init(
+            endpoint: endpoint,
+            httpMethod: httpMethod,
+            dto: dto,
+            isUrlEncoded: isUrlEncoded,
+            token: token
+        )
+    }
+    func update(
+        token: String?
+    ) -> Self {
+        .init(
+            endpoint: endpoint,
+            httpMethod: httpMethod,
+            dto: dto,
+            isUrlEncoded: isUrlEncoded,
+            token: token
+        )
     }
 }

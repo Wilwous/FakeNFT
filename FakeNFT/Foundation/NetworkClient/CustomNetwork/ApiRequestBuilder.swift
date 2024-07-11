@@ -1,15 +1,22 @@
-//
-//  ApiRequestBuilder.swift
-//  FakeNFT
-//
-//  Created by Natasha Trufanova on 07/07/2024.
-//
-
-
 import Foundation
 
-enum ApiRequestBuilder {
-    static func getNft(nftId: String) -> URLNetworkRequest? {
+// MARK: - ApiRequestBuilderProtocol
+
+protocol ApiRequestBuilderProtocol: AnyObject {
+    func getNft(nftId: String) -> URLNetworkRequest?
+    func getProfile(profileId: String) -> URLNetworkRequest?
+    func updateProfile(params: UpdateProfileParams) -> URLNetworkRequest?
+    func getOrder(orderId: String) -> URLNetworkRequest?
+    func updateOrder(orderId: String, nftIds: [String]) -> URLNetworkRequest?
+}
+
+// MARK: - ApiRequestBuilder
+
+final class ApiRequestBuilder: ApiRequestBuilderProtocol {
+    
+    // MARK: - Nft Methods
+    
+    func getNft(nftId: String) -> URLNetworkRequest? {
         let endpoint = "/api/v1/nft/\(nftId)"
         guard let url = URL(string: RequestConstants.baseURL + endpoint) else {
             print("Ошибка: Невалидный URL")
@@ -21,47 +28,53 @@ enum ApiRequestBuilder {
     
     // MARK: - Profile Methods
     
-    static func getProfile(profileId: String) -> URLNetworkRequest? {
+    func getProfile(profileId: String) -> URLNetworkRequest? {
         return buildRequest(endpoint: "/api/v1/profile/\(1)", method: .get)
     }
     
-    static func updateProfile(profileId: String, name: String?, description: String?, website: String?, likes: [String]?, avatar: String?) -> URLNetworkRequest? {
-        let endpoint = "/api/v1/profile/\(profileId)"
+    func updateProfile(params: UpdateProfileParams) -> URLNetworkRequest? {
+        let endpoint = "/api/v1/profile/\(params.profileId)"
         guard let url = URL(string: RequestConstants.baseURL + endpoint) else {
             return nil
         }
         
-        var profileData: String = ""
-        if let name = name {
-            profileData += "&name=\(name)"
+        var parameters: [String] = []
+        if let name = params.name {
+            parameters.append("name=\(name)")
         }
-        if let avatar = avatar {
-            profileData += "&avatar=\(avatar)"
+        if let avatar = params.avatar {
+            parameters.append("avatar=\(avatar)")
         }
-        if let description = description {
-            profileData += "&description=\(description)"
+        if let description = params.description {
+            parameters.append("description=\(description)")
         }
-        if let website = website {
-            profileData += "&website=\(website)"
+        if let website = params.website {
+            parameters.append("website=\(website)")
         }
-        if let likes = likes {
-            for like in likes {
-                profileData += "&likes=\(like)"
-            }
+        if let likes = params.likes {
+            parameters.append("likes=\(likes.joined(separator: ","))")
         }
         
-        guard let requestBodyData = profileData.data(using: .utf8) else {
+        let requestBodyString = parameters.joined(separator: "&")
+        guard let requestBodyData = requestBodyString.data(using: .utf8) else {
             return nil
         }
         
-        return URLNetworkRequest(endpoint: url, httpMethod: .put, dto: requestBodyData, isUrlEncoded: true)
+        return URLNetworkRequest(
+            endpoint: url,
+            httpMethod: .put,
+            dto: requestBodyData,
+            isUrlEncoded: true
+        )
     }
     
-    static func getOrder(orderId: String) -> URLNetworkRequest? {
+    // MARK: - Order Methods
+    
+    func getOrder(orderId: String) -> URLNetworkRequest? {
         return buildRequest(endpoint: "/api/v1/orders/\(orderId)", method: .get)
     }
     
-    static func updateOrder(orderId: String, nftIds: [String]) -> URLNetworkRequest? {
+    func updateOrder(orderId: String, nftIds: [String]) -> URLNetworkRequest? {
         let endpoint = "/api/v1/orders/\(orderId)"
         guard let url = URL(string: RequestConstants.baseURL + endpoint) else { return nil }
         
@@ -72,7 +85,9 @@ enum ApiRequestBuilder {
         return URLNetworkRequest(endpoint: url, httpMethod: .put, dto: requestBodyData, isUrlEncoded: true)
     }
     
-    private static func buildRequest(endpoint: String, method: HttpMethod, parameters: Encodable? = nil, isUrlEncoded: Bool = false) -> URLNetworkRequest? {
+    // MARK: - Private Methods
+    
+    private func buildRequest(endpoint: String, method: HttpMethod, parameters: Encodable? = nil, isUrlEncoded: Bool = false) -> URLNetworkRequest? {
         guard let token = TokenManager.shared.token else {
             assertionFailure("Token should be set")
             return nil
@@ -82,10 +97,9 @@ enum ApiRequestBuilder {
         guard let url = URL(string: urlString) else { return nil }
         
         var request = URLNetworkRequest(endpoint: url, httpMethod: method)
-        request.dto = parameters
-        request.isUrlEncoded = isUrlEncoded
-        request.token = token
-        
+        request = request.update(dto: parameters)
+        request = request.update(isUrlEncoded: isUrlEncoded)
+        request = request.update(token: token)
         return request
     }
 }

@@ -8,8 +8,8 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    var servicesAssembly: ServicesAssembly
-    var customServicesAssembly: CustomServicesAssembly
+    private let servicesAssembly: ServicesAssembly
+    private let customServicesAssembly: CustomServicesAssembly
     
     // MARK: - Initialization
     
