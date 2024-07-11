@@ -82,10 +82,9 @@ enum ApiRequestBuilder {
         guard let url = URL(string: urlString) else { return nil }
         
         var request = URLNetworkRequest(endpoint: url, httpMethod: method)
-        request.dto = parameters
-        request.isUrlEncoded = isUrlEncoded
-        request.token = token
-        
+        request = request.update(dto: parameters)
+        request = request.update(isUrlEncoded: isUrlEncoded)
+        request = request.update(token: token)
         return request
     }
 }
