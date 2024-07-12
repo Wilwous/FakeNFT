@@ -9,23 +9,32 @@ import Foundation
 
 final class CustomServicesAssembly {
     private let servicesAssembly: ServicesAssembly
+    private let apiRequestBuilder: ApiRequestBuilderProtocol
     
     init(
-        servicesAssembly: ServicesAssembly
+        servicesAssembly: ServicesAssembly,
+        apiRequestBuilder: ApiRequestBuilderProtocol = ApiRequestBuilder()
     ) {
         self.servicesAssembly = servicesAssembly
+        self.apiRequestBuilder = apiRequestBuilder
     }
     
     func nftServiceCombine() throws -> NftServiceCombine {
         return NftServiceCombineImp(
             networkClient: try combineNetworkClient(),
-            storage: servicesAssembly.nftStorage
+            storage: servicesAssembly.nftStorage,
+            apiRequestBuilder: apiRequestBuilder
         )
     }
     
     func createProfileViewController() throws -> ProfileViewController {
         let nftServiceCombine = try self.nftServiceCombine()
         return ProfileViewController()
+    }
+    
+    func createCartViewController() throws -> CartViewController {
+        let nftServiceCombine = try self.nftServiceCombine()
+        return CartViewController()
     }
     
     private func combineNetworkClient() throws -> NetworkClientCombine {
