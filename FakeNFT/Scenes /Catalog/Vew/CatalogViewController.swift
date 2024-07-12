@@ -111,7 +111,7 @@ final class CatalogViewController: UIViewController, LoadingView {
     }
     
     // MARK: - Setup View
-    
+
     private func addElements() {
         [tableView,
          activityIndicator
@@ -190,6 +190,32 @@ extension CatalogViewController: UITableViewDelegate {
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
         return CatalogCell.height
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        let collection = viewModel.collections[indexPath.row]
+        let collectionInfo = NftCollection(
+            id: collection.id,
+            nfts: collection.nfts,
+            name: collection.name,
+            cover: collection.coverURL,
+            author: collection.author,
+            description: collection.description
+        )
+        let viewModel = CollectionViewModel(
+            collectionInfo: collectionInfo
+        )
+        let vc = CollectionViewController(
+            viewModel: viewModel
+        )
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(
+            vc,
+            animated: true
+        )
     }
 }
 

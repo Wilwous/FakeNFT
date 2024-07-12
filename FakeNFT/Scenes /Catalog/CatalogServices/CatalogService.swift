@@ -24,11 +24,11 @@ final class CatalogService {
     // MARK: - Public Methods
     
     func getCollections(completion: @escaping NftCollectionCompletion) {
-        let request = NFTCollectionRequest()
+        let request = FetchCatalogsRequest()
         networkClient.send(
             request: request,
             type: [NftCollection].self
-        ) { [weak self] result in
+        ) { result in
             switch result {
             case .success(let nft):
                 completion(.success(nft))
