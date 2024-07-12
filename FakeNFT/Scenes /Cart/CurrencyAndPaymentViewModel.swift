@@ -22,6 +22,7 @@ final class CurrencyAndPaymentViewModel: ObservableObject {
     
     private func loadMockCurrencies() {
         currencies = CurrencyMockData.createMockCurrencies()
+        // TODO: Replace mock data with real network request for fetching currencies
     }
     
     func processPayment() {

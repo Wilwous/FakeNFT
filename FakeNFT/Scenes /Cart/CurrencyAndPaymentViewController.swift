@@ -187,6 +187,7 @@ final class CurrencyAndPaymentViewController: UIViewController {
     }
     
     @objc private func didTapPayButton() {
+        //TODO: Payment logic with selected currency
         print("Кнопка оплатить нажата")
     }
     

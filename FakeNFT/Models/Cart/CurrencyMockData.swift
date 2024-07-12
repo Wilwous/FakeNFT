@@ -9,6 +9,7 @@ import Foundation
 
 enum CurrencyMockData {
     static func createMockCurrencies() -> [Currency] {
+        // TODO: Remove mock data after implementing server data fetching
         return [
             Currency(id: "1", title: "Bitcoin", name: "BTC", image: "cripto_bitcoin"),
             Currency(id: "2", title: "Dogecoin", name: "DOGE", image: "cripto_dogecoin"),
