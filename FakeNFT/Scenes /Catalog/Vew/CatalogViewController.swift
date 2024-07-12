@@ -111,7 +111,7 @@ final class CatalogViewController: UIViewController, LoadingView {
     }
     
     // MARK: - Setup View
-    
+
     private func addElements() {
         [tableView,
          activityIndicator

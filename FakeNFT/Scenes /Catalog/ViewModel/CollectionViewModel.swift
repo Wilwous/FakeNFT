@@ -33,7 +33,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     
     // MARK: - Public Properties
     let collectionInformation: NftCollection
-    var websiteLink = ""
+    var websiteLink = "https://practicum.yandex.ru/ios-developer/?from=catalog"
     
     // MARK: - Private Properties
     

@@ -112,6 +112,7 @@ final class CollectionViewController: UIViewController, LoadingView {
         layoutConstraint()
         setUpNavigationBarBackButton()
         updateViewWithData()
+        addGestureRecognizerToAuthorLabel()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -226,6 +227,18 @@ final class CollectionViewController: UIViewController, LoadingView {
         )
         authorLinkLabel.text = viewModel.collectionInformation.author
         descriptionLabel.text = viewModel.collectionInformation.description
+    }
+    
+    private func addGestureRecognizerToAuthorLabel() {
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(
+                authorLinkDidTap
+            )
+        )
+        authorLinkLabel.addGestureRecognizer(
+            tap
+        )
     }
     
     // MARK: - Setup View
@@ -369,7 +382,13 @@ final class CollectionViewController: UIViewController, LoadingView {
     // MARK: - Action
     
     @objc func authorLinkDidTap() {
-        // TODO: Логика перехода к автору
+        let vc = AuthorWebViewController(
+            websiteLinkString: viewModel.websiteLink
+        )
+        self.navigationController?.pushViewController(
+            vc,
+            animated: true
+        )
     }
 }
 
