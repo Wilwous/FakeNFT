@@ -14,7 +14,7 @@ final class CartViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     private let unifiedService: NftServiceCombine
-    let cartViewModel: CartViewModel
+    private let cartViewModel: CartViewModel
     
     // MARK: - UI Components
     
@@ -105,10 +105,6 @@ final class CartViewController: UIViewController {
         setupNavigationBar()
         setupRefreshControl()
         bindViewModel()
-    }
-    
-    func endRefreshing() {
-        tableView.refreshControl?.endRefreshing()
     }
     
     // MARK: - Bind ViewModel
@@ -221,13 +217,15 @@ final class CartViewController: UIViewController {
     }
     
     private func updateLoadingState(_ isLoading: Bool) {
-        if isLoading {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
-            tableView.reloadData()
+        DispatchQueue.main.async {
+            if isLoading {
+                self.activityIndicator.startAnimating()
+            } else {
+                self.activityIndicator.stopAnimating()
+                self.tableView.reloadData()
+            }
+            self.updateEmptyStateAndRightBarItem(isLoading: isLoading)
         }
-        updateEmptyStateAndRightBarItem(isLoading: isLoading)
     }
     
     private func updateEmptyStateAndRightBarItem(isLoading: Bool) {
@@ -292,7 +290,7 @@ final class CartViewController: UIViewController {
     
     
     @objc private func refreshData() {
-        cartViewModel.loadCartItems()
+        cartViewModel.loadCartItems(isPullToRefresh: true)
     }
 }
 
