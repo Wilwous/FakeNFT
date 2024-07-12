@@ -95,11 +95,8 @@ final class CurrencyAndPaymentViewController: UIViewController {
         currencyAndPaymentViewModel.$isLoading
             .receive(on: RunLoop.main)
             .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.showLoadingIndicator()
-                } else {
-                    self?.hideLoadingIndicator()
-                }
+                isLoading ? self?.showLoadingIndicator() : self?.hideLoadingIndicator()
+                self?.collectionView.isUserInteractionEnabled = !isLoading
             }
             .store(in: &cancellables)
     }
@@ -174,36 +171,8 @@ final class CurrencyAndPaymentViewController: UIViewController {
         // TODO: SuccessScreen
     }
     
-    
     private func showPaymentFailedAlert() {
         // TODO: Failed payment
-    }
-    
-    
-    // MARK: - Actions
-    
-    @objc private func didTapBackButton() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    @objc private func didTapPayButton() {
-        //TODO: Payment logic with selected currency
-        print("Кнопка оплатить нажата")
-    }
-    
-    private func setupTermsLabelTap() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTermsLabel))
-        termsLabel.addGestureRecognizer(tapGesture)
-    }
-    
-    @objc private func didTapTermsLabel() {
-        let formattedURL = policySite
-        let webViewController = WebViewController()
-        webViewController.targetURL = formattedURL
-        let navController = UINavigationController(rootViewController: webViewController)
-        navController.modalPresentationStyle = .fullScreen
-        
-        present(navController, animated: true, completion: nil)
     }
     
     private func showLoadingIndicator() {
@@ -217,6 +186,32 @@ final class CurrencyAndPaymentViewController: UIViewController {
         for subview in view.subviews where subview is UIActivityIndicatorView {
             subview.removeFromSuperview()
         }
+    }
+    
+    private func setupTermsLabelTap() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTermsLabel))
+        termsLabel.addGestureRecognizer(tapGesture)
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func didTapPayButton() {
+        //TODO: Payment logic with selected currency
+        print("Кнопка оплатить нажата")
+    }
+    
+    @objc private func didTapTermsLabel() {
+        let formattedURL = policySite
+        let webViewController = WebViewController()
+        webViewController.targetURL = formattedURL
+        let navController = UINavigationController(rootViewController: webViewController)
+        navController.modalPresentationStyle = .fullScreen
+        
+        present(navController, animated: true, completion: nil)
     }
 }
 
