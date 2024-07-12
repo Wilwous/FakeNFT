@@ -17,6 +17,15 @@ final class CatalogCell: UITableViewCell {
     
     // MARK: - UI Components
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(
+            style: .medium
+        )
+        indicator.hidesWhenStopped = true
+        
+        return indicator
+    }()
+    
     private lazy var catalogImage: UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .ypGray
@@ -33,15 +42,6 @@ final class CatalogCell: UITableViewCell {
         label.textColor = .ypBlack
         
         return label
-    }()
-    
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(
-            style: .medium
-        )
-        indicator.hidesWhenStopped = true
-        
-        return indicator
     }()
     
     // MARK: - Initializers
@@ -75,7 +75,7 @@ final class CatalogCell: UITableViewCell {
     // MARK: - Public Methods
     
     func configure(
-        with viewModel: CollectionViewModel
+        with viewModel: NFTViewModel
     ) {
         catalogLabel.text = viewModel.name
         loadImage(
@@ -105,9 +105,9 @@ final class CatalogCell: UITableViewCell {
     // MARK: - Setup View
     
     private func addElements() {
-        [catalogLabel,
-         catalogImage,
-         activityIndicator
+        [activityIndicator,
+         catalogLabel,
+         catalogImage
         ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
@@ -117,6 +117,14 @@ final class CatalogCell: UITableViewCell {
     private func layoutConstraint() {
         NSLayoutConstraint.activate(
             [
+                activityIndicator.centerXAnchor.constraint(
+                    equalTo: catalogImage.centerXAnchor
+                ),
+                
+                activityIndicator.centerYAnchor.constraint(
+                    equalTo: catalogImage.centerYAnchor
+                ),
+                
                 catalogImage.topAnchor.constraint(
                     equalTo: contentView.topAnchor
                 ),
@@ -136,14 +144,6 @@ final class CatalogCell: UITableViewCell {
                 ),
                 catalogLabel.leadingAnchor.constraint(
                     equalTo: contentView.leadingAnchor
-                ),
-                
-                activityIndicator.centerXAnchor.constraint(
-                    equalTo: catalogImage.centerXAnchor
-                ),
-                
-                activityIndicator.centerYAnchor.constraint(
-                    equalTo: catalogImage.centerYAnchor
                 )
             ]
         )

@@ -9,5 +9,8 @@ import Foundation
 
 // MARK: - Typealiases
 
-typealias NftCollectionCompletion = (Result<[NftCollection], Error>) -> Void
 typealias Binding<T> = (T) -> Void
+typealias NftCollectionCompletion = (Result<[NftCollection], Error>) -> Void
+typealias NftResultCompletion = (Result<NftDetailsResponseModel, Error>) -> Void
+typealias CartResultCompletion = (Result<CartResponseModel, Error>) -> Void
+typealias ProfileInfoResultCompletion = (Result<UserProfileResponseModel, Error>) -> Void

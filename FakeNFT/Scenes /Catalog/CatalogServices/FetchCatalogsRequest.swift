@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Network
 
-struct NFTCollectionRequest: NetworkRequest {
+struct FetchCatalogsRequest: NetworkRequest {
     
     // MARK: - Public Properties
     

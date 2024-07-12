@@ -11,14 +11,14 @@ import ProgressHUD
 // MARK: - Protocol
 
 protocol CatalogViewModelProtocol {
-    var collectionsBinding: Binding<[CollectionViewModel]>? { get set }
-    var collections: [CollectionViewModel] { get }
+    var collectionsBinding: Binding<[NFTViewModel]>? { get set }
+    var collections: [NFTViewModel] { get }
     var service: CatalogService? { get set }
     func fetchCollections()
     var showLoadingHandler: (() -> ())? { get set }
     var hideLoadingHandler: (() -> ())? { get set }
     func updateSorter(newSorting: SortState)
-    func sorterCollections(collectionsToSort: [CollectionViewModel]) -> [CollectionViewModel]
+    func sorterCollections(collectionsToSort: [NFTViewModel]) -> [NFTViewModel]
 }
 
 // MARK: - ViewModel
@@ -32,7 +32,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     
     // MARK: - Public Properties
     
-    var collectionsBinding: Binding<[CollectionViewModel]>?
+    var collectionsBinding: Binding<[NFTViewModel]>?
     var service: CatalogService?
     
     // MARK: - Private Properties
@@ -41,7 +41,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     
     private(
         set
-    ) var collections: [CollectionViewModel] = [] {
+    ) var collections: [NFTViewModel] = [] {
         didSet {
             collectionsBinding?(
                 collections
@@ -55,7 +55,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
         self.service = service
     }
     
-    //MARK: - Public methods
+    //MARK: - Public Methods
     
     func updateSorter(
         newSorting: SortState
@@ -85,12 +85,14 @@ final class CatalogViewModel: CatalogViewModelProtocol {
                 let nftCollectionsResult
             ):
                 let convertedCollections = nftCollectionsResult.map { collection in
-                    CollectionViewModel(
+                    NFTViewModel(
                         nftCollection: NftCollection(
                             id: collection.id,
                             nfts: collection.nfts,
                             name: collection.name,
-                            cover: collection.cover
+                            cover: collection.cover,
+                            author: collection.author,
+                            description: collection.description
                         )
                     )
                 }
@@ -110,8 +112,8 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     }
     
     func sorterCollections(
-        collectionsToSort: [CollectionViewModel]
-    ) -> [CollectionViewModel] {
+        collectionsToSort: [NFTViewModel]
+    ) -> [NFTViewModel] {
         guard let sortingRawValue = sorterStorage.sorterDescriptor,
               let sorting = SortState(
                 rawValue: sortingRawValue
@@ -119,7 +121,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
             return collectionsToSort
         }
         
-        var sortedCollections: [CollectionViewModel] = collectionsToSort
+        var sortedCollections: [NFTViewModel] = collectionsToSort
         switch sorting {
         case .name:
             sortedCollections.sort {

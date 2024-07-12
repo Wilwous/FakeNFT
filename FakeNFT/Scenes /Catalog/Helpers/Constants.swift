@@ -26,4 +26,12 @@ struct Constants {
     
     static let openNftTitle = NSLocalizedString("Catalog.openNft", comment: "")
     static let testNftId = "22"
+    
+    //MARK: - CollectionViewController
+    
+    static let leftRightInsets: Double = 16
+    static let spaceBetweenCoverAndInfo: Double = 8
+    static let infoHeight: Double = 56
+    static let minimumInteritemSpacing: Double = 9
+    static let minimumLineSpacing: Double = 28
 }
