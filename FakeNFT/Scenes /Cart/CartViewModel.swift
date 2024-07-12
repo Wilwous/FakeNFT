@@ -11,9 +11,9 @@ import Foundation
 // MARK: - Enums
 
 enum SortType: String {
-    case price = "price"
-    case rating = "rating"
-    case name = "name"
+    case price
+    case rating
+    case name
 }
 
 // MARK: - ViewModel
