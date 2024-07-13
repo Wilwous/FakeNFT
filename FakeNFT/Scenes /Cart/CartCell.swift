@@ -8,6 +8,7 @@
 import UIKit
 
 import Combine
+import Kingfisher
 import UIKit
 
 final class CartCell: UITableViewCell, ReuseIdentifying {
@@ -15,8 +16,9 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
     // MARK: - Properties
     
     static var defaultReuseIdentifier: String = "CartCell"
-    private var cancellables = Set<AnyCancellable>()
-    
+    var cancellables = Set<AnyCancellable>()
+    private var viewModel: CartCellViewModel?
+    var deleteButtonTapped = PassthroughSubject<Nft, Never>()
     private let ratingViewModel: RatingViewModel
     private let ratingView: RatingView
     
@@ -25,6 +27,8 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 12
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -105,35 +109,24 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
     // MARK: - Configuration
     
     func configure(with viewModel: CartCellViewModel) {
+        guard self.viewModel !== viewModel else { return }
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        self.viewModel = viewModel
         bindViewModel(viewModel)
     }
     
     // MARK: - Bind ViewModel
     
     private func bindViewModel(_ viewModel: CartCellViewModel) {
-        viewModel.$name
+        viewModel.$viewData
             .receive(on: RunLoop.main)
-            .map { $0 as String? }
-            .assign(to: \.text, on: nameLabel)
-            .store(in: &cancellables)
-        
-        viewModel.$price
-            .receive(on: RunLoop.main)
-            .map { $0 as String? }
-            .assign(to: \.text, on: priceLabel)
-            .store(in: &cancellables)
-        
-        viewModel.$rating
-            .receive(on: RunLoop.main)
-            .sink { [weak self] rating in
-                self?.ratingViewModel.setRating(rating)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$imageName
-            .receive(on: RunLoop.main)
-            .sink { [weak self] imageName in
-                self?.nftImageView.image = UIImage(named: imageName)
+            .sink { [weak self] viewData in
+                self?.nameLabel.text = viewData.name
+                self?.priceLabel.text = viewData.price
+                self?.ratingViewModel.setRating(viewData.rating)
+                guard let self = self, let url = URL(string: viewData.imageURLString) else { return }
+                self.loadImage(url: url)
             }
             .store(in: &cancellables)
     }
@@ -164,6 +157,8 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
         ])
         
         setCustomSpacing()
+        
+        deleteItemButton.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
     }
     
     private func setCustomSpacing() {
@@ -173,6 +168,26 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
         
         mainStackView.setCustomSpacing(20, after: nftImageView)
         mainStackView.setCustomSpacing(12, after: verticalStackView)
+    }
+    
+    // MARK: - Utility Methods
+    
+    private func loadImage(url: URL) {
+        nftImageView.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 12)
+        nftImageView.kf.setImage(
+            with: url,
+            placeholder: .none,
+            options: [.processor(processor)]
+        )
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func didTapDeleteButton() {
+        if let nft = viewModel?.nft {
+            deleteButtonTapped.send(nft)
+        }
     }
 }
 
