@@ -27,14 +27,19 @@ final class CartViewModel: ObservableObject {
     @Published var totalPrice: String = "0 ETH"
     @Published var isLoading: Bool = false
     
+    // MARK: - Private Properties
+    
     private let unifiedService: NftServiceCombine
     private let sortKey = "selectedSortType"
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Subjects
     
     let deleteButtonTapped = PassthroughSubject<Nft, Never>()
     let endRefreshingSubject = PassthroughSubject<Void, Never>()
     let presentDeleteConfirmationSubject = PassthroughSubject<(Nft, URL?), Never>()
     let confirmDeletionSubject = PassthroughSubject<Nft, Never>()
+    let clearCartSubject = PassthroughSubject<Void, Never>() // 🐑
     
     // MARK: - Initialization
     
@@ -42,7 +47,8 @@ final class CartViewModel: ObservableObject {
         self.unifiedService = unifiedService
         bindDeleteButtonTapped()
         bindConfirmDeletion()
-        //        testAddOrder() // добвляем для тестирования
+//        testAddOrder() // добвляем для тестирования
+        bindClearCart()
         loadCartItems()
         applySavedSortType()
     }
@@ -103,7 +109,7 @@ final class CartViewModel: ObservableObject {
         updateCartSummary()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Bind Methods
     
     private func bindDeleteButtonTapped() {
         deleteButtonTapped
@@ -120,6 +126,16 @@ final class CartViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    private func bindClearCart() {
+        clearCartSubject
+            .sink { [weak self] in
+                self?.loadCartItems()
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Private Methods
     
     // метод для имитиции добавления нфт в корзину в каталоге
     private func testAddOrder() {

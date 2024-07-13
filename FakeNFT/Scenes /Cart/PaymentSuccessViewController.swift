@@ -63,6 +63,16 @@ final class PaymentSuccessViewController: UIViewController {
     }
     
     @objc private func didTapReturnButton() {
-        //TODO: Return to cart and refresh cart data
+        if let navigationController = navigationController {
+            for controller in navigationController.viewControllers {
+                if let cartVC = controller as? CartViewController {
+                    cartVC.cartViewModel.clearCartSubject.send()
+                    navigationController.popToViewController(cartVC, animated: true)
+                    return
+                }
+            }
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
 }

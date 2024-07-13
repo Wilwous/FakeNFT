@@ -14,7 +14,7 @@ final class CartViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     private let unifiedService: NftServiceCombine
-    private let cartViewModel: CartViewModel
+    let cartViewModel: CartViewModel
     
     // MARK: - UI Components
     
@@ -323,5 +323,3 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
         return 140
     }
 }
-
-
