@@ -44,14 +44,14 @@ final class TabBarController: UITabBarController {
         let profileVC = UINavigationController(rootViewController: getVC(
             viewController: ProfileViewController(),
             title: "Профиль",
-            image: getImage(named: "profile_no_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
+            image: getImage(named: "profile_no_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlackDay),
             selectedImage: getImage(named: "profile_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
         ))
         
         let catalogVC = UINavigationController(rootViewController: getVC(
             viewController: CatalogViewController(),
             title: "Каталог",
-            image: getImage(named: "catalog_no_active", orSystemName: "square.stack.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
+            image: getImage(named: "catalog_no_active", orSystemName: "square.stack.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlackDay),
             selectedImage: getImage(named: "catalog_active", orSystemName: "square.stack.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
         ))
         
@@ -63,14 +63,14 @@ final class TabBarController: UITabBarController {
         let cartVC = UINavigationController(rootViewController: getVC(
             viewController: cartViewController,
             title: "Корзина",
-            image: getImage(named: "basket_no_active", orSystemName: "bag.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
+            image: getImage(named: "basket_no_active", orSystemName: "bag.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlackDay),
             selectedImage: getImage(named: "basket_active", orSystemName: "bag.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
         ))
         
         let statisticsVC = UINavigationController(rootViewController: getVC(
             viewController: StatisticsViewController(),
             title: "Статистика",
-            image: getImage(named: "statistics_no_active", orSystemName: "flag.2.crossed.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
+            image: getImage(named: "statistics_no_active", orSystemName: "flag.2.crossed.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlackDay),
             selectedImage: getImage(named: "statistics_active", orSystemName: "flag.2.crossed.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
         ))
         
