@@ -73,7 +73,7 @@ final class CurrencyAndPaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypWhiteDay
         setupUI()
         bindViewModel()
         setupTermsLabelTap()

@@ -45,7 +45,7 @@ final class DeleteFromCartViewController: UIViewController {
         let label = UILabel()
         label.text = "Вы уверены, что хотите\nудалить объект из корзины?"
         label.font = .caption2
-        label.textColor = .ypBlack
+        label.textColor = .ypBlackDay
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
