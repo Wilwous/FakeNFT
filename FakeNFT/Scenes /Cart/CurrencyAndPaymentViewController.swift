@@ -180,11 +180,30 @@ final class CurrencyAndPaymentViewController: UIViewController {
     // MARK: - Private Methods
     
     private func showSuccessScreen() {
-        // TODO: SuccessScreen
+        let successVC = PaymentSuccessViewController()
+        navigationController?.pushViewController(successVC, animated: true)
     }
     
     private func showPaymentFailedAlert() {
-        // TODO: Failed payment
+        let alertController = UIAlertController(
+            title: "Ошибка",
+            message: "Не удалось произвести оплату",
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(
+            title: "Отмена",
+            style: .cancel,
+            handler: nil
+        )
+        let retryAction = UIAlertAction(
+            title: "Повторить",
+            style: .default
+        ) { [weak self] _ in
+            self?.didTapPayButton()
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(retryAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     private func showLoadingIndicator() {
