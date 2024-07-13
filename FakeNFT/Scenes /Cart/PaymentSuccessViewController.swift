@@ -9,6 +9,8 @@ import UIKit
 
 final class PaymentSuccessViewController: UIViewController {
     
+    // MARK: - UI Components
+    
     private let successImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "success")
@@ -21,6 +23,7 @@ final class PaymentSuccessViewController: UIViewController {
         let label = UILabel()
         label.text = "Успех! Оплата прошла,\nпоздравляем с покупкой!"
         label.textAlignment = .center
+        label.numberOfLines = 2
         label.font = .headline3
         return label
     }()
@@ -31,12 +34,16 @@ final class PaymentSuccessViewController: UIViewController {
         title: "Вернуться в каталог"
     )
     
+    // MARK: - Lifecycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhiteDay
         setupUI()
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
+    
+    // MARK: - Setup Methods
     
     private func setupUI() {
         [successImageView, successLabel, returnButton].forEach {
@@ -61,6 +68,8 @@ final class PaymentSuccessViewController: UIViewController {
         
         returnButton.addTarget(self, action: #selector(didTapReturnButton), for: .touchUpInside)
     }
+    
+    // MARK: - Actions
     
     @objc private func didTapReturnButton() {
         if let navigationController = navigationController {
