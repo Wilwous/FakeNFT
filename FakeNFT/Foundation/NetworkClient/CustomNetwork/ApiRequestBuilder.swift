@@ -8,6 +8,8 @@ protocol ApiRequestBuilderProtocol: AnyObject {
     func updateProfile(params: UpdateProfileParams) -> URLNetworkRequest?
     func getOrder(orderId: String) -> URLNetworkRequest?
     func updateOrder(orderId: String, nftIds: [String]) -> URLNetworkRequest?
+    func getCurrencies() -> URLNetworkRequest?
+    func payOrder(orderId: String, currencyId: String) -> URLNetworkRequest?
 }
 
 // MARK: - ApiRequestBuilder
@@ -82,7 +84,25 @@ final class ApiRequestBuilder: ApiRequestBuilderProtocol {
         let requestBodyString = nftIds.isEmpty ? "" : "nfts=\(nftsJoined)"
         let requestBodyData = requestBodyString.data(using: .utf8)
         
-        return URLNetworkRequest(endpoint: url, httpMethod: .put, dto: requestBodyData, isUrlEncoded: true)
+        return URLNetworkRequest(
+            endpoint: url,
+            httpMethod: .put,
+            dto: requestBodyData,
+            isUrlEncoded: true
+        )
+    }
+    
+    // MARK: - Сurrency Methods
+    
+    func getCurrencies() -> URLNetworkRequest? {
+        return buildRequest(endpoint: "/api/v1/currencies", method: .get)
+    }
+    
+    func payOrder(orderId: String, currencyId: String) -> URLNetworkRequest? {
+        return buildRequest(
+            endpoint: "/api/v1/orders/\(orderId)/payment/\(currencyId)",
+            method: .get
+        )
     }
     
     // MARK: - Private Methods
