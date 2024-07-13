@@ -99,6 +99,18 @@ final class CurrencyAndPaymentViewController: UIViewController {
                 self?.collectionView.isUserInteractionEnabled = !isLoading
             }
             .store(in: &cancellables)
+        
+        currencyAndPaymentViewModel.paymentSuccessSubject
+            .sink { [weak self] in
+                self?.showSuccessScreen()
+            }
+            .store(in: &cancellables)
+        
+        currencyAndPaymentViewModel.paymentFailedSubject
+            .sink { [weak self] in
+                self?.showPaymentFailedAlert()
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Setup UI
@@ -200,8 +212,8 @@ final class CurrencyAndPaymentViewController: UIViewController {
     }
     
     @objc private func didTapPayButton() {
-        //TODO: Payment logic with selected currency
-        print("Кнопка оплатить нажата")
+        guard let selectedCurrency = currencyAndPaymentViewModel.selectedCurrency else { return }
+        currencyAndPaymentViewModel.payOrder(with: selectedCurrency)
     }
     
     @objc private func didTapTermsLabel() {
@@ -226,7 +238,7 @@ extension CurrencyAndPaymentViewController: UICollectionViewDelegate, UICollecti
         let cell: CurrencyCell = collectionView.dequeueReusableCell(indexPath: indexPath)
         let currency = currencyAndPaymentViewModel.currencies[indexPath.item]
         let currencyCellViewModel = CurrencyCellViewModel(currency: currency)
-            cell.configure(with: currencyCellViewModel)
+        cell.configure(with: currencyCellViewModel)
         return cell
     }
     
