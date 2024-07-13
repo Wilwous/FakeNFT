@@ -5,6 +5,7 @@
 //  Created by Владислав Горелов on 30.06.2024.
 //
 
+import Combine
 import UIKit
 
 final class UsersNFTsViewController: UIViewController {
@@ -21,14 +22,24 @@ final class UsersNFTsViewController: UIViewController {
     }()
 
     private let nftsTableView = UsersNTFsTableView()
+    private var cancellables = Set<AnyCancellable>()
+    private let nftService: NftServiceCombine
 
+    init(nftService: NftServiceCombine) {
+        self.nftService = nftService
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         setupUI()
         setupConstraints()
-        loadNFTs()
+        loadUsersNFTs(forProfileId: "1")
     }
 
     // MARK: - Setup Navigation Bar
@@ -97,11 +108,34 @@ final class UsersNFTsViewController: UIViewController {
             nftsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
-    private func loadNFTs() {
-          nftsTableView.nfts = UsersNFTsMockData.nfts
-          nftsTableView.reloadData()
-
-          noNFTLabel.isHidden = !nftsTableView.nfts.isEmpty
-      }
 }
+
+extension UsersNFTsViewController {
+
+    private func loadUsersNFTs(forProfileId profileId: String) {
+        nftService.loadAllNfts(forProfileId: profileId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("✅ Загрузка всех NFT для профиля завершена успешно")
+                case .failure(let error):
+                    print("⛔️ Ошибка загрузки всех NFT для профиля: \(error)")
+                }
+            }, receiveValue: { [weak self] nfts in
+                print("✅ Получены данные NFT для профиля: \(nfts)")
+                self?.nftsTableView.nfts = nfts.map {
+                    (
+                        imageUrl: URL(string: $0.images.first?.absoluteString ?? ""),
+                        title: $0.name,
+                        rating: $0.rating,
+                        author: $0.author,
+                        priceValue: "\($0.price) ETH"
+                    )
+                }
+                self?.nftsTableView.reloadData()
+                self?.noNFTLabel.isHidden = !self!.nftsTableView.nfts.isEmpty
+            })
+            .store(in: &cancellables)
+    }
+}
+

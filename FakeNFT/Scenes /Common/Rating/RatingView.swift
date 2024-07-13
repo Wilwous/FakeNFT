@@ -16,7 +16,7 @@ final class RatingView: UIView {
     private let starSize: CGFloat = 12
     private let starSpacing: CGFloat = 2
     
-    private var viewModel: RatingViewModel
+    var viewModel: RatingViewModel
     private var cancellables = Set<AnyCancellable>()
     
     private var starImageViews: [UIImageView] = []

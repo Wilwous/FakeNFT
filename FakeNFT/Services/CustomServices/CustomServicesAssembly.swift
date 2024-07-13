@@ -29,14 +29,14 @@ final class CustomServicesAssembly {
     
     func createProfileViewController() throws -> ProfileViewController {
         let nftServiceCombine = try self.nftServiceCombine()
-        return ProfileViewController()
+        return ProfileViewController(unifiedService: nftServiceCombine)
     }
     
     func createCartViewController() throws -> CartViewController {
         let nftServiceCombine = try self.nftServiceCombine()
         return CartViewController()
     }
-    
+
     private func combineNetworkClient() throws -> NetworkClientCombine {
         guard let defaultNetworkClient = servicesAssembly.networkClient as? DefaultNetworkClient else {
             throw NetworkClientError.custom("Network client is not of type DefaultNetworkClient")

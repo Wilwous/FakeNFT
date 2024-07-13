@@ -40,14 +40,19 @@ final class TabBarController: UITabBarController {
     }
     
     private func setupViewControllers() {
-        
+
+        guard let profileViewController = try? customServicesAssembly.createProfileViewController() else {
+            print("Failed to initialize ProfileViewController")
+            return
+        }
+
         let profileVC = UINavigationController(rootViewController: getVC(
-            viewController: ProfileViewController(),
+            viewController: profileViewController,
             title: "Профиль",
             image: getImage(named: "profile_no_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlack),
             selectedImage: getImage(named: "profile_active", orSystemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.ypBlue)
         ))
-        
+
         let catalogVC = UINavigationController(rootViewController: getVC(
             viewController: CatalogViewController(),
             title: "Каталог",

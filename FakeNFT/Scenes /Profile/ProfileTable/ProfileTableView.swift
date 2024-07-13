@@ -10,9 +10,9 @@ import UIKit
 final class ProfileTableView: UITableViewController {
 
     private let iconImage = UIImage(systemName: "chevron.forward")!
-
-    var myNFTsCount = 112
-    var favoritesNFTsCount = 11
+    private let unifiedService: NftServiceCombine
+    var myNFTsCount = 0
+    var favoritesNFTsCount = 0
 
     private var items: [(String, String?, UIImage)] {
         return [
@@ -20,6 +20,15 @@ final class ProfileTableView: UITableViewController {
             ("Избранные NFT", "(\(favoritesNFTsCount))", iconImage),
             ("О разработчике", nil, iconImage)
         ]
+    }
+
+    init(unifiedService: NftServiceCombine) {
+        self.unifiedService = unifiedService
+        super.init(style: .plain)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -62,7 +71,7 @@ final class ProfileTableView: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if indexPath.row == 0 {
-            let usersNFTsVC = UsersNFTsViewController()
+            let usersNFTsVC = UsersNFTsViewController(nftService: unifiedService)
             let navController = UINavigationController(rootViewController: usersNFTsVC)
             navController.modalPresentationStyle = .fullScreen
             rightToLeftTransition()
@@ -70,7 +79,7 @@ final class ProfileTableView: UITableViewController {
         }
 
         if indexPath.row == 1 {
-            let usersNFTsVC = FavoritesNFTsViewController()
+            let usersNFTsVC = FavoritesNFTsViewController(unifiedService: unifiedService)
             let navController = UINavigationController(rootViewController: usersNFTsVC)
             navController.modalPresentationStyle = .fullScreen
             rightToLeftTransition()

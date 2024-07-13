@@ -8,7 +8,12 @@
 import UIKit
 
 protocol EditProfileDelegate: AnyObject {
-    func didSaveProfile(name: String, avatar: UIImage?, description: String, site: String)
+    func didSaveProfile(
+        name: String,
+        avatar: String?,
+        description: String,
+        site: String
+    )
 }
 
 final class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
@@ -97,7 +102,6 @@ final class EditProfileViewController: UIViewController, UIImagePickerController
         view.addSubview(siteTextField)
         view.addSubview(warningLabel)
         view.addSubview(closeButton)
-
         view.bringSubviewToFront(closeButton)
     }
 
@@ -186,10 +190,16 @@ final class EditProfileViewController: UIViewController, UIImagePickerController
         warningLabel.isHidden = true
         nameTextField.setBorder(color: .clear, width: 0)
 
-        delegate?.didSaveProfile(name: name, avatar: avatarImageView.image, description: descriptionTextField.text ?? "", site: siteTextField.text ?? "")
+        delegate?.didSaveProfile(
+            name: name,
+            avatar: avatarImageView.imageURLString,
+            description: descriptionTextField.text ?? "",
+            site: siteTextField.text ?? ""
+        )
+
         dismiss(animated: true, completion: nil)
     }
-    
+
     @objc private func closeTapped() {
         saveProfile()
     }
@@ -207,5 +217,18 @@ final class EditProfileViewController: UIViewController, UIImagePickerController
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+private var imageUrlKey: UInt8 = 0
+
+extension UIImageView {
+    var imageURLString: String? {
+        get {
+            return objc_getAssociatedObject(self, &imageUrlKey) as? String
+        }
+        set {
+            objc_setAssociatedObject(self, &imageUrlKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }

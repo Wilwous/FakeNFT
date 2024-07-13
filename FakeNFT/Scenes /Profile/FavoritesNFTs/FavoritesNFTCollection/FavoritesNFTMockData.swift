@@ -16,12 +16,12 @@ struct NFTItem {
 
 struct FavoritesNFTMockData {
     static let items: [NFTItem] = [
-        NFTItem(imageName: "card_april", name: "Archie", ratingImageName: "rating_1", price: "1,78 ETH"),
-        NFTItem(imageName: "card_april", name: "Pixi", ratingImageName: "rating_4", price: "1,78 ETH"),
-        NFTItem(imageName: "card_april", name: "Melissa", ratingImageName: "rating_5", price: "1,78 ETH"),
-        NFTItem(imageName: "card_april", name: "April", ratingImageName: "rating_3", price: "1,78 ETH"),
-        NFTItem(imageName: "card_april", name: "Daisy", ratingImageName: "rating_1", price: "1,78 ETH"),
-        NFTItem(imageName: "card_april", name: "Lilo", ratingImageName: "rating_5", price: "1,78 ETH")
+        NFTItem(
+            imageName: "card_april",
+            name: "Название",
+            ratingImageName: "rating_0",
+            price: "0 ETH"
+        )
     ]
 }
 

@@ -10,9 +10,9 @@ import UIKit
 final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
 
     var nfts: [(
-        image: UIImage?,
+        imageUrl: URL?,
         title: String,
-        rating: UIImage?,
+        rating: Int,
         author: String,
         priceValue: String
     )] = []
@@ -35,12 +35,13 @@ final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UsersNFTsTableViewCell.identifier, for: indexPath) as? UsersNFTsTableViewCell else {
             return UITableViewCell()
         }
+
         tableView.backgroundColor = .ypWhiteDay
         cell.backgroundColor = .ypWhiteDay
-        cell.selectionStyle = .none 
         let nft = nfts[indexPath.row]
         cell.configure(with: nft)
         return cell

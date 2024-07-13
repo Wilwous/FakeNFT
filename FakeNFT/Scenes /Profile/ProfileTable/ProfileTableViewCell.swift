@@ -8,9 +8,9 @@
 import UIKit
 
 final class ProfileTableViewCell: UITableViewCell {
-
+    
     //MARK: - Properties
-
+    
     static let identifier = "ProfileTableViewCell"
     
     private let mainTextLabel: UILabel = {
@@ -56,7 +56,7 @@ final class ProfileTableViewCell: UITableViewCell {
     }
     
     //MARK: - Methods
-
+    
     private func setCellConstraints() {
         mainTextLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryTextLabel.translatesAutoresizingMaskIntoConstraints = false

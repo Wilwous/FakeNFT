@@ -5,6 +5,7 @@
 //  Created by Владислав Горелов on 30.06.2024.
 //
 
+import Kingfisher
 import UIKit
 
 final class UsersNFTsTableViewCell: UITableViewCell {
@@ -36,17 +37,17 @@ final class UsersNFTsTableViewCell: UITableViewCell {
         return label
     }()
 
-    private let ratingImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        return imageView
+    private let ratingView: RatingView = {
+        let ratingView = RatingView(frame: .zero, viewModel: RatingViewModel())
+        return ratingView
     }()
 
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.font = .caption2
         label.textAlignment = .left
-        label.numberOfLines = 2
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping 
         return label
     }()
 
@@ -98,12 +99,12 @@ final class UsersNFTsTableViewCell: UITableViewCell {
     @objc private func likeTapped() {
         isLiked.toggle()
         likeImageView.image = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_no_active")
-        print("Лайк \(isLiked ? "поставлен" : "отменён")")
+        print("Лайк \(isLiked ? "поставлен ❤️" : "отменён 💔")")
     }
 
     private func setupUI() {
         infoStackView.addArrangedSubview(titleLabel)
-        infoStackView.addArrangedSubview(ratingImageView)
+        infoStackView.addArrangedSubview(ratingView)
         infoStackView.addArrangedSubview(authorLabel)
 
         priceStackView.addArrangedSubview(priceLabel)
@@ -142,22 +143,45 @@ final class UsersNFTsTableViewCell: UITableViewCell {
         ])
     }
 
+    private func authorLabelFormatter(author: String) {
+        var authorUrl = author
+        authorUrl = authorUrl.replacingOccurrences(of: "https://", with: "")
+        if authorUrl.hasSuffix("/") {
+            authorUrl = String(authorUrl.dropLast())
+        }
+
+        let fullText = "от \(authorUrl)"
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakMode = .byCharWrapping
+
+        let fullRange = NSRange(location: 0, length: attributedString.length)
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: fullRange)
+
+        let nonBreakingSpaceRange = (fullText as NSString).range(of: "от ")
+        if nonBreakingSpaceRange.location != NSNotFound {
+            attributedString.replaceCharacters(in: NSRange(location: nonBreakingSpaceRange.location + nonBreakingSpaceRange.length - 1, length: 1), with: NSAttributedString(string: "\u{00A0}"))
+        }
+        authorLabel.attributedText = attributedString
+    }
+
     func configure(
         with nft: (
-            image: UIImage?,
+            imageUrl: URL?,
             title: String,
-            rating: UIImage?,
+            rating: Int,
             author: String,
             priceValue: String
         )
     ) {
-        nftImageView.image = nft.image
+        if let url = nft.imageUrl {
+            nftImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"))
+        } else {
+            nftImageView.image = UIImage(named: "placeholder")
+        }
         titleLabel.text = nft.title
-        ratingImageView.image = nft.rating
-        authorLabel.text = "от \(nft.author)"
+        ratingView.viewModel.setRating(nft.rating)
+        authorLabelFormatter(author: nft.author)
         priceValueLabel.text = nft.priceValue
-
-        isLiked = false 
-        likeImageView.image = UIImage(named: "like_no_active")
     }
 }
