@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Kingfisher
 import UIKit
 
 final class CurrencyCell: UICollectionViewCell, ReuseIdentifying {
@@ -13,6 +14,12 @@ final class CurrencyCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
+    
+    override var isSelected: Bool {
+        didSet {
+            contentView.layer.borderColor = isSelected ? UIColor.ypBlackDay.cgColor : UIColor.clear.cgColor
+        }
+    }
     
     // MARK: - UI Components
     
@@ -78,11 +85,27 @@ final class CurrencyCell: UICollectionViewCell, ReuseIdentifying {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with currency: Currency) {
-        currencyImageView.image = UIImage(named: currency.image)
-        fullNameLabel.text = currency.title
-        shortNameLabel.text = currency.name
+    // MARK: - Configuration
+    
+    func configure(with viewModel: CurrencyCellViewModel) {
+        bindViewModel(viewModel)
     }
+    
+    // MARK: - Bind ViewModel
+    
+    private func bindViewModel(_ viewModel: CurrencyCellViewModel) {
+        viewModel.$viewData
+            .receive(on: RunLoop.main)
+            .sink { [weak self] viewData in
+                self?.fullNameLabel.text = viewData.title
+                self?.shortNameLabel.text = viewData.name
+                guard let self = self, let url = URL(string: viewData.imageURLString) else { return }
+                self.loadImage(url: url)
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Setup UI
     
     private func setupUI() {
         contentView.addSubview(mainStackView)
@@ -121,10 +144,14 @@ final class CurrencyCell: UICollectionViewCell, ReuseIdentifying {
         contentView.layer.cornerRadius = 12
     }
     
-    override var isSelected: Bool {
-        didSet {
-            contentView.layer.borderColor = isSelected ? UIColor.ypBlackDay.cgColor : UIColor.clear.cgColor
-        }
+    private func loadImage(url: URL) {
+        currencyImageView.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 6)
+        currencyImageView.kf.setImage(
+            with: url,
+            placeholder: .none,
+            options: [.processor(processor)]
+        )
     }
 }
 

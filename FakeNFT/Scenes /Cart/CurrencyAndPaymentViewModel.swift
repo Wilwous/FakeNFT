@@ -13,23 +13,31 @@ final class CurrencyAndPaymentViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var selectedCurrency: Currency?
     
+    private let unifiedService: NftServiceCombine
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
-        processPayment()
-        loadMockCurrencies()
+    init(unifiedService: NftServiceCombine) {
+        self.unifiedService = unifiedService
+        loadCurrencies()
     }
     
-    private func loadMockCurrencies() {
-        currencies = CurrencyMockData.createMockCurrencies()
-        // TODO: Replace mock data with real network request for fetching currencies
-    }
+    // MARK: - Data Loading
     
-    func processPayment() {
+    private func loadCurrencies() {
         isLoading = true
-        // Симуляция запроса на сервер
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.isLoading = false
-        }
-    }    
+        unifiedService.loadCurrencies()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                self?.isLoading = false
+                switch completion {
+                case .failure(let error):
+                    print("Failed to load currencies: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] currencies in
+                self?.currencies = currencies
+            })
+            .store(in: &cancellables)
+    }
 }

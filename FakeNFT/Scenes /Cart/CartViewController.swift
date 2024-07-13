@@ -282,7 +282,7 @@ final class CartViewController: UIViewController {
     }
     
     @objc private func didTapСheckoutButton() {
-        let currencyAndPaymentviewModel = CurrencyAndPaymentViewModel()
+        let currencyAndPaymentviewModel = CurrencyAndPaymentViewModel(unifiedService: unifiedService)
         let currencyAndPaymentVC = CurrencyAndPaymentViewController(viewModel: currencyAndPaymentviewModel)
         currencyAndPaymentVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(currencyAndPaymentVC, animated: true)

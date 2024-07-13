@@ -225,7 +225,8 @@ extension CurrencyAndPaymentViewController: UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CurrencyCell = collectionView.dequeueReusableCell(indexPath: indexPath)
         let currency = currencyAndPaymentViewModel.currencies[indexPath.item]
-        cell.configure(with: currency)
+        let currencyCellViewModel = CurrencyCellViewModel(currency: currency)
+            cell.configure(with: currencyCellViewModel)
         return cell
     }
     

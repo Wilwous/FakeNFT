@@ -46,9 +46,9 @@
 		7CC22F4B2C269A3A00260828 /* Decomposition (Profile) - Влад Горелов.md in Resources */ = {isa = PBXBuildFile; fileRef = 7CC22F482C269A3A00260828 /* Decomposition (Profile) - Влад Горелов.md */; };
 		7F1F54F62C2AA6E600E8C7C6 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1F54F52C2AA6E600E8C7C6 /* ActionButton.swift */; };
 		7F71732B2C3FCA01009379D8 /* UpdateProfileParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71732A2C3FCA01009379D8 /* UpdateProfileParams.swift */; };
+		7F71732D2C419E05009379D8 /* OrderPaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71732C2C419E05009379D8 /* OrderPaymentResponse.swift */; };
 		7F73DF622C2AE0250074B69B /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F73DF612C2AE0250074B69B /* CartCell.swift */; };
 		7F73DF642C2AE2B10074B69B /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F73DF632C2AE2B10074B69B /* CartViewModel.swift */; };
-		7F71732D2C419E05009379D8 /* OrderPaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71732C2C419E05009379D8 /* OrderPaymentResponse.swift */; };
 		7F973BC02C2B02AE00DCFCD2 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F973BBF2C2B02AE00DCFCD2 /* RatingView.swift */; };
 		7F973BC22C2B02E000DCFCD2 /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F973BC12C2B02E000DCFCD2 /* RatingViewModel.swift */; };
 		7F973BC52C2B129500DCFCD2 /* CartCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F973BC42C2B129500DCFCD2 /* CartCellViewModel.swift */; };
@@ -58,7 +58,6 @@
 		7FA2B6312C3D97A900879CC1 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B6302C3D97A900879CC1 /* Currency.swift */; };
 		7FA2B6332C3DD28500879CC1 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B6322C3DD28500879CC1 /* CurrencyCell.swift */; };
 		7FA2B6352C3DD2E500879CC1 /* CurrencyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B6342C3DD2E500879CC1 /* CurrencyCellViewModel.swift */; };
-		7FA2B6372C3DD58200879CC1 /* CurrencyMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B6362C3DD58200879CC1 /* CurrencyMockData.swift */; };
 		7FA2B6392C3DD66800879CC1 /* CurrencyAndPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B6382C3DD66800879CC1 /* CurrencyAndPaymentViewController.swift */; };
 		7FA2B63B2C3DD6DC00879CC1 /* CurrencyAndPaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B63A2C3DD6DC00879CC1 /* CurrencyAndPaymentViewModel.swift */; };
 		7FA2B63D2C3DD73200879CC1 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2B63C2C3DD73200879CC1 /* WebViewController.swift */; };
@@ -138,9 +137,9 @@
 		7CC22F482C269A3A00260828 /* Decomposition (Profile) - Влад Горелов.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "Decomposition (Profile) - Влад Горелов.md"; sourceTree = "<group>"; };
 		7F1F54F52C2AA6E600E8C7C6 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		7F71732A2C3FCA01009379D8 /* UpdateProfileParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileParams.swift; sourceTree = "<group>"; };
+		7F71732C2C419E05009379D8 /* OrderPaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderPaymentResponse.swift; sourceTree = "<group>"; };
 		7F73DF612C2AE0250074B69B /* CartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
 		7F73DF632C2AE2B10074B69B /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
-		7F71732C2C419E05009379D8 /* OrderPaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderPaymentResponse.swift; sourceTree = "<group>"; };
 		7F973BBF2C2B02AE00DCFCD2 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		7F973BC12C2B02E000DCFCD2 /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
 		7F973BC42C2B129500DCFCD2 /* CartCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCellViewModel.swift; sourceTree = "<group>"; };
@@ -150,7 +149,6 @@
 		7FA2B6302C3D97A900879CC1 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		7FA2B6322C3DD28500879CC1 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		7FA2B6342C3DD2E500879CC1 /* CurrencyCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCellViewModel.swift; sourceTree = "<group>"; };
-		7FA2B6362C3DD58200879CC1 /* CurrencyMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyMockData.swift; sourceTree = "<group>"; };
 		7FA2B6382C3DD66800879CC1 /* CurrencyAndPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyAndPaymentViewController.swift; sourceTree = "<group>"; };
 		7FA2B63A2C3DD6DC00879CC1 /* CurrencyAndPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyAndPaymentViewModel.swift; sourceTree = "<group>"; };
 		7FA2B63C2C3DD73200879CC1 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 			children = (
 				7FA2B62E2C3D5BE700879CC1 /* Order.swift */,
 				7FA2B6302C3D97A900879CC1 /* Currency.swift */,
-				7FA2B6362C3DD58200879CC1 /* CurrencyMockData.swift */,
 				7F71732C2C419E05009379D8 /* OrderPaymentResponse.swift */,
 			);
 			path = Cart;
@@ -717,7 +714,6 @@
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
 				8B5D036B2C25BE6B0096C8A1 /* CatalogViewController.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
-				7FA2B6372C3DD58200879CC1 /* CurrencyMockData.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				7F73DF642C2AE2B10074B69B /* CartViewModel.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
