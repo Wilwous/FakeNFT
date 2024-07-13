@@ -8,6 +8,7 @@
 import Combine
 import Kingfisher
 import UIKit
+import ProgressHUD
 
 final class ProfileViewController: UIViewController, EditProfileDelegate {
 
@@ -18,10 +19,10 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
     private var currentProfile: Profile?
 
     private let avatarImage = UIImageView()
-    private var userName: String = "Joaquin Phoenix"
-    private var userAvatar: UIImage? = UIImage(named: "avatar_photo")
-    private var descriptionText = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
-    private var userSite: String = "google.com"
+    private var userName: String = ""
+    private var userAvatar: UIImage? = UIImage(named: "avatar_stub")
+    private var descriptionText = ""
+    private var userSite: String = ""
 
     private var textContainer = UIView()
     private var userProfileContainer = UIView()
@@ -297,12 +298,14 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
 extension ProfileViewController {
 
     private func loadUserProfile() {
+        ProgressHUD.show()
         unifiedService.loadProfile(id: "1")
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
+                    ProgressHUD.dismiss()
                     print("⛔️ Не удалось загрузить профиль: \(error)")
                 }
             }, receiveValue: { [weak self] profile in
@@ -326,9 +329,11 @@ extension ProfileViewController {
                     print("⛔️ Ошибка загрузки аватарки: \(error)")
                 }
                 self.updateProfileContainer()
+                ProgressHUD.dismiss()
             }
         } else {
             updateProfileContainer()
+            ProgressHUD.dismiss()
         }
 
         profileTableView.myNFTsCount = profile.nfts.count
@@ -336,6 +341,7 @@ extension ProfileViewController {
         profileTableView.tableView.reloadData()
         updateProfileContainer()
     }
+
 
     private func updateProfileContainer() {
         userProfileContainer.removeFromSuperview()
