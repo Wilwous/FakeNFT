@@ -38,7 +38,6 @@ final class CurrencyAndPaymentViewModel: ObservableObject {
     
     func payOrder(with currency: Currency) {
         isLoading = true
-//        paymentFailedSubject.send() // временно для тестирования алерта
         unifiedService.payOrder(with: currency)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -60,6 +59,7 @@ final class CurrencyAndPaymentViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
+    
     // MARK: - Private Methods
     
     private func loadCurrencies() {

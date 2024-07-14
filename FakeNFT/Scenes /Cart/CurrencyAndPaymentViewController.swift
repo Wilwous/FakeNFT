@@ -174,7 +174,6 @@ final class CurrencyAndPaymentViewController: UIViewController {
         ])
         
         payButton.addTarget(self, action: #selector(didTapPayButton), for: .touchUpInside)
-        
     }
     
     // MARK: - Private Methods
