@@ -8,6 +8,8 @@ typealias NftListCombineCompletion = AnyPublisher<[Nft], NetworkClientError>
 typealias CartItemsCompletion = AnyPublisher<[Nft], NetworkClientError>
 typealias OrderCompletion = AnyPublisher<Order, NetworkClientError>
 typealias ProfileCombineCompletion = AnyPublisher<Profile, NetworkClientError>
+typealias CurrencyCombineCompletion = AnyPublisher<[Currency], NetworkClientError>
+typealias OrderPaymentResponseCompletion = AnyPublisher<OrderPaymentResponse, NetworkClientError>
 
 // MARK: - NftServiceCombine
 
@@ -24,10 +26,15 @@ protocol NftServiceCombine {
     func loadProfile(id: String) -> ProfileCombineCompletion
     func updateProfile(params: UpdateProfileParams) -> ProfileCombineCompletion
     
-    //MARK: Methods
+    //MARK: Cart Methods
     
     func getCartItems() -> CartItemsCompletion
     func updateOrder(id: String, nftIds: [String]) -> OrderCompletion
+    
+    //MARK: Currency and Payment Methods
+    
+    func loadCurrencies() -> CurrencyCombineCompletion
+    func payOrder(with currency: Currency) -> OrderPaymentResponseCompletion
 }
 
 final class NftServiceCombineImp: NftServiceCombine {
@@ -59,12 +66,8 @@ final class NftServiceCombineImp: NftServiceCombine {
         }
         
         guard let request = apiRequestBuilder.getNft(nftId: id) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Invalid NFT ID for request"
-                )
-            )
-            .eraseToAnyPublisher()
+            return Fail(error: NetworkClientError.custom("Invalid NFT ID for request"))
+                .eraseToAnyPublisher()
         }
         
         return networkClient.send(request: request, type: Nft.self)
@@ -75,15 +78,9 @@ final class NftServiceCombineImp: NftServiceCombine {
     }
     
     func loadAllNfts(forProfileId profileId: String) -> NftListCombineCompletion {
-        guard let profileRequest = apiRequestBuilder.getProfile(
-            profileId: profileId
-        ) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Invalid profile ID for request"
-                )
-            )
-            .eraseToAnyPublisher()
+        guard let profileRequest = apiRequestBuilder.getProfile(profileId: profileId) else {
+            return Fail(error: NetworkClientError.custom("Invalid profile ID for request"))
+                .eraseToAnyPublisher()
         }
         
         return networkClient.send(request: profileRequest, type: Profile.self)
@@ -97,15 +94,9 @@ final class NftServiceCombineImp: NftServiceCombine {
     }
     
     func loadFavoriteNfts(profileId: String) -> NftListCombineCompletion {
-        guard let request = apiRequestBuilder.getProfile(
-            profileId: profileId
-        ) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Invalid Profile ID for request"
-                )
-            )
-            .eraseToAnyPublisher()
+        guard let request = apiRequestBuilder.getProfile(profileId: profileId) else {
+            return Fail(error: NetworkClientError.custom("Invalid Profile ID for request"))
+                .eraseToAnyPublisher()
         }
         return networkClient.send(request: request, type: Profile.self)
             .flatMap { profile -> NftListCombineCompletion in
@@ -123,27 +114,17 @@ final class NftServiceCombineImp: NftServiceCombine {
     // MARK: - Profile Methods
     
     func loadProfile(id: String) -> ProfileCombineCompletion {
-        guard let request = apiRequestBuilder.getProfile(
-            profileId: id
-        ) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Invalid Profile ID for request"
-                )
-            )
-            .eraseToAnyPublisher()
+        guard let request = apiRequestBuilder.getProfile(profileId: id) else {
+            return Fail(error: NetworkClientError.custom("Invalid Profile ID for request"))
+                .eraseToAnyPublisher()
         }
         return networkClient.send(request: request, type: Profile.self)
             .eraseToAnyPublisher()
     }
     
     func updateProfile(params: UpdateProfileParams) -> ProfileCombineCompletion {
-        guard let request = apiRequestBuilder.updateProfile(
-            params: params
-        ) else {
-            return Fail(
-                error: NetworkClientError.urlSessionError
-            ).eraseToAnyPublisher()
+        guard let request = apiRequestBuilder.updateProfile(params: params) else {
+            return Fail(error: NetworkClientError.urlSessionError).eraseToAnyPublisher()
         }
         
         return networkClient.send(request: request, type: Profile.self)
@@ -153,21 +134,13 @@ final class NftServiceCombineImp: NftServiceCombine {
     // MARK: - Cart Methods
     
     func getCartItems() -> CartItemsCompletion {
-        guard let request = apiRequestBuilder.getOrder(
-            orderId: currentOrderId
-        ) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Unable to form order request"
-                )
-            ).eraseToAnyPublisher()
+        guard let request = apiRequestBuilder.getOrder(orderId: currentOrderId) else {
+            return Fail(error: NetworkClientError.custom("Unable to form order request")).eraseToAnyPublisher()
         }
         
         return networkClient.send(request: request, type: Order.self)
             .flatMap { [weak self] order -> CartItemsCompletion in
-                guard let self = self else {
-                    return Just([]).setFailureType(to: NetworkClientError.self).eraseToAnyPublisher()
-                }
+                guard let self = self else { return Just([]).setFailureType(to: NetworkClientError.self).eraseToAnyPublisher() }
                 guard !order.nfts.isEmpty else {
                     return Just([]).setFailureType(to: NetworkClientError.self).eraseToAnyPublisher()
                 }
@@ -180,19 +153,32 @@ final class NftServiceCombineImp: NftServiceCombine {
     }
     
     func updateOrder(id: String, nftIds: [String]) -> OrderCompletion {
-        guard let request = apiRequestBuilder.updateOrder(
-            orderId: id,
-            nftIds: nftIds
-        ) else {
-            return Fail(
-                error: NetworkClientError.custom(
-                    "Unable to form update order request"
-                )
-            ).eraseToAnyPublisher()
+        guard let request = apiRequestBuilder.updateOrder(orderId: id, nftIds: nftIds) else {
+            return Fail(error: NetworkClientError.custom("Unable to form update order request")).eraseToAnyPublisher()
         }
         
         return networkClient.send(request: request, type: Order.self)
             .mapError { NetworkClientError.urlRequestError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Currency and Payment Methods
+    
+    func loadCurrencies() -> CurrencyCombineCompletion {
+        guard let request = apiRequestBuilder.getCurrencies() else {
+            return Fail(error: NetworkClientError.custom("Invalid URL")).eraseToAnyPublisher()
+        }
+        
+        return networkClient.send(request: request, type: [Currency].self)
+            .eraseToAnyPublisher()
+    }
+    
+    func payOrder(with currency: Currency) -> OrderPaymentResponseCompletion {
+        guard let request = apiRequestBuilder.payOrder(orderId: currentOrderId, currencyId: currency.id) else {
+            return Fail(error: NetworkClientError.custom("Invalid URL")).eraseToAnyPublisher()
+        }
+        
+        return networkClient.send(request: request, type: OrderPaymentResponse.self)
             .eraseToAnyPublisher()
     }
 }

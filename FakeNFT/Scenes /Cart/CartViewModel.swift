@@ -27,14 +27,19 @@ final class CartViewModel: ObservableObject {
     @Published var totalPrice: String = "0 ETH"
     @Published var isLoading: Bool = false
     
+    // MARK: - Private Properties
+    
     private let unifiedService: NftServiceCombine
     private let sortKey = "selectedSortType"
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Subjects
     
     let deleteButtonTapped = PassthroughSubject<Nft, Never>()
     let endRefreshingSubject = PassthroughSubject<Void, Never>()
     let presentDeleteConfirmationSubject = PassthroughSubject<(Nft, URL?), Never>()
     let confirmDeletionSubject = PassthroughSubject<Nft, Never>()
+    let clearCartSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Initialization
     
@@ -42,7 +47,7 @@ final class CartViewModel: ObservableObject {
         self.unifiedService = unifiedService
         bindDeleteButtonTapped()
         bindConfirmDeletion()
-        //        testAddOrder() // добвляем для тестирования
+        bindClearCart()
         loadCartItems()
         applySavedSortType()
     }
@@ -103,7 +108,7 @@ final class CartViewModel: ObservableObject {
         updateCartSummary()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Bind Methods
     
     private func bindDeleteButtonTapped() {
         deleteButtonTapped
@@ -121,34 +126,15 @@ final class CartViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // метод для имитиции добавления нфт в корзину в каталоге
-    private func testAddOrder() {
-        let nftIds = [
-            "5093c01d-e79e-4281-96f1-76db5880ba70",
-            "d6a02bd1-1255-46cd-815b-656174c1d9c0",
-            "594aaf01-5962-4ab7-a6b5-470ea37beb93",
-            "eb959204-76cc-46ef-ba07-aefa036ca1a5",
-            "739e293c-1067-43e5-8f1d-4377e744ddde",
-            "3434c774-0e0f-476e-a314-24f4f0dfed86",
-            "fa03574c-9067-45ad-9379-e3ed2d70df78",
-            "a4edeccd-ad7c-4c7f-b09e-6edec02a812b"
-        ]
-        let orderId = "1"
-        
-        unifiedService.updateOrder(id: orderId, nftIds: nftIds)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("Error order creation: \(error.localizedDescription)")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { order in
-                print("Order created: \(order)")
-            })
+    private func bindClearCart() {
+        clearCartSubject
+            .sink { [weak self] in
+                self?.loadCartItems()
+            }
             .store(in: &cancellables)
     }
+    
+    // MARK: - Private Methods
     
     private func saveSortType(_ sortType: SortType) {
         UserDefaults.standard.set(sortType.rawValue, forKey: sortKey)

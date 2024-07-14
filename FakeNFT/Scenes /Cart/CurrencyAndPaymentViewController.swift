@@ -73,7 +73,7 @@ final class CurrencyAndPaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypWhiteDay
         setupUI()
         bindViewModel()
         setupTermsLabelTap()
@@ -97,6 +97,18 @@ final class CurrencyAndPaymentViewController: UIViewController {
             .sink { [weak self] isLoading in
                 isLoading ? self?.showLoadingIndicator() : self?.hideLoadingIndicator()
                 self?.collectionView.isUserInteractionEnabled = !isLoading
+            }
+            .store(in: &cancellables)
+        
+        currencyAndPaymentViewModel.paymentSuccessSubject
+            .sink { [weak self] in
+                self?.showSuccessScreen()
+            }
+            .store(in: &cancellables)
+        
+        currencyAndPaymentViewModel.paymentFailedSubject
+            .sink { [weak self] in
+                self?.showPaymentFailedAlert()
             }
             .store(in: &cancellables)
     }
@@ -162,17 +174,35 @@ final class CurrencyAndPaymentViewController: UIViewController {
         ])
         
         payButton.addTarget(self, action: #selector(didTapPayButton), for: .touchUpInside)
-        
     }
     
     // MARK: - Private Methods
     
     private func showSuccessScreen() {
-        // TODO: SuccessScreen
+        let successVC = PaymentSuccessViewController()
+        navigationController?.pushViewController(successVC, animated: true)
     }
     
     private func showPaymentFailedAlert() {
-        // TODO: Failed payment
+        let alertController = UIAlertController(
+            title: "Ошибка",
+            message: "Не удалось произвести оплату",
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(
+            title: "Отмена",
+            style: .cancel,
+            handler: nil
+        )
+        let retryAction = UIAlertAction(
+            title: "Повторить",
+            style: .default
+        ) { [weak self] _ in
+            self?.didTapPayButton()
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(retryAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     private func showLoadingIndicator() {
@@ -200,8 +230,8 @@ final class CurrencyAndPaymentViewController: UIViewController {
     }
     
     @objc private func didTapPayButton() {
-        //TODO: Payment logic with selected currency
-        print("Кнопка оплатить нажата")
+        guard let selectedCurrency = currencyAndPaymentViewModel.selectedCurrency else { return }
+        currencyAndPaymentViewModel.payOrder(with: selectedCurrency)
     }
     
     @objc private func didTapTermsLabel() {
@@ -225,7 +255,8 @@ extension CurrencyAndPaymentViewController: UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CurrencyCell = collectionView.dequeueReusableCell(indexPath: indexPath)
         let currency = currencyAndPaymentViewModel.currencies[indexPath.item]
-        cell.configure(with: currency)
+        let currencyCellViewModel = CurrencyCellViewModel(currency: currency)
+        cell.configure(with: currencyCellViewModel)
         return cell
     }
     

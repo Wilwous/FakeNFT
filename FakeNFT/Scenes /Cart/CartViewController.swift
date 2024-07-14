@@ -14,7 +14,7 @@ final class CartViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     private let unifiedService: NftServiceCombine
-    private let cartViewModel: CartViewModel
+    let cartViewModel: CartViewModel
     
     // MARK: - UI Components
     
@@ -114,6 +114,7 @@ final class CartViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] (_: [Nft]) in
                 self?.updateUI()
+                self?.updateCheckoutButtonState()
             }
             .store(in: &cancellables)
         
@@ -254,6 +255,11 @@ final class CartViewController: UIViewController {
         present(deleteVC, animated: true, completion: nil)
     }
     
+    private func updateCheckoutButtonState() {
+        let isCartEmpty = cartViewModel.nftsInCart.isEmpty
+        checkoutButton.isEnabled = !isCartEmpty
+    }
+    
     // MARK: - Actions
     
     @objc private func didTapSortButton() {
@@ -282,12 +288,11 @@ final class CartViewController: UIViewController {
     }
     
     @objc private func didTapСheckoutButton() {
-        let currencyAndPaymentviewModel = CurrencyAndPaymentViewModel()
+        let currencyAndPaymentviewModel = CurrencyAndPaymentViewModel(unifiedService: unifiedService)
         let currencyAndPaymentVC = CurrencyAndPaymentViewController(viewModel: currencyAndPaymentviewModel)
         currencyAndPaymentVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(currencyAndPaymentVC, animated: true)
     }
-    
     
     @objc private func refreshData() {
         cartViewModel.loadCartItems(isPullToRefresh: true)
@@ -323,5 +328,3 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
         return 140
     }
 }
-
-
