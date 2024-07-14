@@ -24,6 +24,8 @@ final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewD
         delegate = self
         rowHeight = 140
         separatorStyle = .none
+        showsVerticalScrollIndicator = false
+        allowsSelection = false
     }
 
     required init?(coder: NSCoder) {

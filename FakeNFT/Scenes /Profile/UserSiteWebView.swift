@@ -80,7 +80,17 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         navigationItem.leftBarButtonItem?.tintColor = .ypBlackDay
     }
 
+    private func leftToRightTransition() {
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.type = .push
+        transition.subtype = .fromLeft
+        view.window!.layer.add(transition, forKey: kCATransition)
+    }
+
     @objc func backTapped() {
+        leftToRightTransition()
         dismiss(animated: true, completion: nil)
     }
 }

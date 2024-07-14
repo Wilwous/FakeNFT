@@ -7,6 +7,7 @@
 
 import Combine
 import UIKit
+import ProgressHUD
 
 final class UsersNFTsViewController: UIViewController {
 
@@ -24,6 +25,7 @@ final class UsersNFTsViewController: UIViewController {
     private let nftsTableView = UsersNTFsTableView()
     private var cancellables = Set<AnyCancellable>()
     private let nftService: NftServiceCombine
+    private let refreshControl = UIRefreshControl()
 
     init(nftService: NftServiceCombine) {
         self.nftService = nftService
@@ -39,6 +41,7 @@ final class UsersNFTsViewController: UIViewController {
         setupNavigationBar()
         setupUI()
         setupConstraints()
+        setupRefreshControl() 
         loadUsersNFTs(forProfileId: "1")
     }
 
@@ -108,13 +111,30 @@ final class UsersNFTsViewController: UIViewController {
             nftsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+
+    // MARK: - Setup Refresh Control
+
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(refreshNFTs), for: .valueChanged)
+        nftsTableView.addSubview(refreshControl)
+    }
+
+    @objc private func refreshNFTs() {
+        loadUsersNFTs(forProfileId: "1")
+    }
 }
 
 extension UsersNFTsViewController {
 
     private func loadUsersNFTs(forProfileId profileId: String) {
+        if !refreshControl.isRefreshing {
+            ProgressHUD.show()
+        }
+
         nftService.loadAllNfts(forProfileId: profileId)
             .sink(receiveCompletion: { completion in
+                ProgressHUD.dismiss()
+                self.refreshControl.endRefreshing()
                 switch completion {
                 case .finished:
                     print("✅ Загрузка всех NFT для профиля завершена успешно")
@@ -138,4 +158,3 @@ extension UsersNFTsViewController {
             .store(in: &cancellables)
     }
 }
-

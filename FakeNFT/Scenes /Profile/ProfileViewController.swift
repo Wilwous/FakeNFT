@@ -34,13 +34,16 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         }
     }
 
-
     // MARK: - Initializer
 
     init(unifiedService: NftServiceCombine) {
         self.unifiedService = unifiedService
         self.profileTableView = ProfileTableView(unifiedService: unifiedService)
         super.init(nibName: nil, bundle: nil)
+
+        profileTableView.onDeveloperCellTap = { [weak self] in
+            self?.handleSiteTap()
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -56,6 +59,11 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         setupNavigationBar()
         loadUserProfile()
         // addTestLikes() // метод для имитации действия пользователя в каталоге
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        profileTableView.updateFavoritesNFTCount()
     }
 
     //MARK: - Private Methods
@@ -170,15 +178,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         return descriptionView
     }
 
-    @objc func handleSiteTap() {
-        let formattedURL = formatUrl(userSite)
-        let webViewController = WebViewController()
-        webViewController.targetURL = formattedURL
-        let navController = UINavigationController(rootViewController: webViewController)
-        navController.modalPresentationStyle = .fullScreen
-        present(navController, animated: true, completion: nil)
-    }
-
     private func formatUrl(_ url: String) -> String {
         if !url.lowercased().starts(with: "http://") && !url.lowercased().starts(with: "https://") {
             return "https://" + url
@@ -198,6 +197,10 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         profileTableView = ProfileTableView(unifiedService: unifiedService)
         addChild(profileTableView)
         view.addSubview(profileTableView.tableView)
+
+        profileTableView.onDeveloperCellTap = { [weak self] in
+            self?.handleSiteTap()
+        }
 
         profileTableView.tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -232,22 +235,8 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         )
         rightBarItem.tintColor = .ypBlackDay
         navigationItem.rightBarButtonItem = rightBarItem
-        updateEditButtonVisibility() // Изначально скрываем иконку
+        updateEditButtonVisibility()
 
-    }
-
-    @objc private func didTapEditButton() {
-
-        let editVC = EditProfileViewController(
-            userName: userName,
-            userAvatar: userAvatar,
-            descriptionText: descriptionText,
-            userSite: userSite
-        )
-
-        editVC.delegate = self
-        let navController = UINavigationController(rootViewController: editVC)
-        present(navController, animated: true, completion: nil)
     }
 
     // MARK: - EditProfileDelegate
@@ -302,7 +291,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
 
     func updateProfileLikes(profileId: String = "1", likes: [String]) {
         let params = UpdateProfileParams(likes: likes)
-
         unifiedService.updateProfile(params: params)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -316,6 +304,39 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
                 self.updateUI(with: updatedProfile)
             })
             .store(in: &cancellables)
+    }
+
+    @objc private func didTapEditButton() {
+
+        let editVC = EditProfileViewController(
+            userName: userName,
+            userAvatar: userAvatar,
+            descriptionText: descriptionText,
+            userSite: userSite
+        )
+
+        editVC.delegate = self
+        let navController = UINavigationController(rootViewController: editVC)
+        present(navController, animated: true, completion: nil)
+    }
+
+    @objc func handleSiteTap() {
+        let formattedURL = formatUrl(userSite)
+        let webViewController = WebViewController()
+        webViewController.targetURL = formattedURL
+        let navController = UINavigationController(rootViewController: webViewController)
+        navController.modalPresentationStyle = .fullScreen
+        navController.view.layer.add(makeTransition(), forKey: kCATransition)
+        present(navController, animated: false, completion: nil)
+    }
+
+    private func makeTransition() -> CATransition {
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.type = .moveIn
+        transition.subtype = .fromRight
+        return transition
     }
 }
 

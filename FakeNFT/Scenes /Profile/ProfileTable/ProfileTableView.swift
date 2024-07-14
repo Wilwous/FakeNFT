@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class ProfileTableView: UITableViewController {
 
@@ -13,6 +14,8 @@ final class ProfileTableView: UITableViewController {
     private let unifiedService: NftServiceCombine
     var myNFTsCount = 0
     var favoritesNFTsCount = 0
+    var onDeveloperCellTap: (() -> Void)?
+    private var cancellables = Set<AnyCancellable>()
 
     private var items: [(String, String?, UIImage)] {
         return [
@@ -49,6 +52,23 @@ final class ProfileTableView: UITableViewController {
         view.window!.layer.add(transition, forKey: kCATransition)
     }
 
+    func updateFavoritesNFTCount() {
+        unifiedService.loadProfile(id: "1")
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("⛔️ Ошибка загрузки профиля: \(error)")
+                }
+            }, receiveValue: { [weak self] profile in
+                self?.favoritesNFTsCount = profile.likes.count 
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -84,6 +104,10 @@ final class ProfileTableView: UITableViewController {
             navController.modalPresentationStyle = .fullScreen
             rightToLeftTransition()
             present(navController, animated: false, completion: nil)
+        }
+
+        if indexPath.row == 2 {
+            onDeveloperCellTap?()
         }
     }
 }
