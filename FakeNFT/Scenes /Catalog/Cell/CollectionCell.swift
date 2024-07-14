@@ -10,9 +10,17 @@ import Kingfisher
 
 final class CollectionCell: UICollectionViewCell {
     
+    // MARK: - Сlosure
+    
+    var didLikeTappedHandler: ((String) -> ())?
+    
     // MARK: - Static Properties
     
     static let identifier = "CollectionCell"
+    
+    // MARK: - Private Properties
+    
+    private var nftId: String?
     
     // MARK: - UI Components
     
@@ -28,7 +36,7 @@ final class CollectionCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "like_no_active"), for: .normal)
         button.addTarget(
-            CollectionCell.self,
+            self,
             action: #selector(didLikeButtonTapped),
             for: .touchUpInside
         )
@@ -108,6 +116,12 @@ final class CollectionCell: UICollectionViewCell {
         updateRating(rating: model.stars)
         updateCartButton(isInCart: model.isInCart)
         updateLikeButton(isLiked: model.isLiked)
+        nftId = model.id
+    }
+    
+    func updateLikeButton(isLiked: Bool) {
+        let imageName = isLiked ? "like_active" : "like_no_active"
+        likeButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
     // MARK: Private Methods
@@ -134,48 +148,17 @@ final class CollectionCell: UICollectionViewCell {
         }
     }
     
-    private func updateRating(
-        rating: Int
-    ) {
+    private func updateRating(rating: Int) {
         for i in 0..<rating {
-            if let starImage = UIImage(
-                named: "star_active"
-            ) {
+            if let starImage = UIImage(named: "star_active") {
                 starsImages[i].image = starImage
             }
         }
     }
     
-    private func updateCartButton(
-        isInCart: Bool
-    ) {
-        if isInCart {
-            cartButton.setImage(
-                UIImage(
-                    named: "item_add"), for: .normal
-            )
-        } else {
-            cartButton.setImage(
-                UIImage(
-                    named: "item_delete"), for: .normal
-            )
-        }
-    }
-    
-    private func updateLikeButton(
-        isLiked: Bool
-    ) {
-        if isLiked {
-            likeButton.setImage(
-                UIImage(
-                    named: "like_active"), for: .normal
-            )
-        } else {
-            likeButton.setImage(
-                UIImage(
-                    named: "like_no_active"),for: .normal
-            )
-        }
+    private func updateCartButton(isInCart: Bool) {
+        let imageName = isInCart ? "item_add" : "item_delete"
+        cartButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
     // MARK: - Setup View
@@ -237,7 +220,6 @@ final class CollectionCell: UICollectionViewCell {
                     equalTo: starsStackView.bottomAnchor,
                     constant: 5
                 ),
-                // Нужно добавить в стек
                 
                 nameLabel.heightAnchor.constraint(
                     equalToConstant: 22
@@ -324,10 +306,12 @@ final class CollectionCell: UICollectionViewCell {
     //MARK: - Action
     
     @objc func didLikeButtonTapped() {
-        // TODO: Логика добавления в избранное
+        guard let nftId = nftId else { return }
+        didLikeTappedHandler?(nftId)
     }
     
     @objc func didCartButtonTapped() {
         // TODO: Логика добавления в корзину
     }
 }
+

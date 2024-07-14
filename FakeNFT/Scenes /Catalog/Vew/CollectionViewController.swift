@@ -381,8 +381,16 @@ extension CollectionViewController: UICollectionViewDataSource {
         ) as? CollectionCell else {
             return UICollectionViewCell()
         }
+        
         cell.prepareForReuse()
         cell.configure(with: viewModel.nfts[indexPath.row])
+        
+        cell.didLikeTappedHandler = { [weak self] nftId in
+            self?.viewModel.didLikeButtonTapped(nftId: nftId) { isLiked in
+                cell.updateLikeButton(isLiked: isLiked)
+                collectionView.reloadItems(at: [indexPath])
+            }
+        }
         
         return cell
     }

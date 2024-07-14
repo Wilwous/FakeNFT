@@ -48,6 +48,8 @@
 		7C1FA1E22C34788400D2A427 /* NftCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1FA1E12C34788400D2A427 /* NftCollection.swift */; };
 		7C1FA1E42C347B8D00D2A427 /* FetchCatalogsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1FA1E32C347B8D00D2A427 /* FetchCatalogsRequest.swift */; };
 		7C601DB72C40DC7500E8A262 /* AuthorWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C601DB62C40DC7500E8A262 /* AuthorWebViewController.swift */; };
+		7C6B6AC52C443C3000EFA080 /* FetchLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B6AC42C443C3000EFA080 /* FetchLikesRequest.swift */; };
+		7C6B6AC72C443D3C00EFA080 /* LikesResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B6AC62C443D3C00EFA080 /* LikesResultModel.swift */; };
 		7C6C19B12C40188500EE5A59 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6C19B02C40188500EE5A59 /* CollectionCell.swift */; };
 		7C6C19B32C401F3100EE5A59 /* CollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6C19B22C401F3100EE5A59 /* CollectionViewModel.swift */; };
 		7C6C19C52C408ED600EE5A59 /* NftCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6C19C42C408ED600EE5A59 /* NftCellModel.swift */; };
@@ -138,6 +140,8 @@
 		7C1FA1E12C34788400D2A427 /* NftCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCollection.swift; sourceTree = "<group>"; };
 		7C1FA1E32C347B8D00D2A427 /* FetchCatalogsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCatalogsRequest.swift; sourceTree = "<group>"; };
 		7C601DB62C40DC7500E8A262 /* AuthorWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorWebViewController.swift; sourceTree = "<group>"; };
+		7C6B6AC42C443C3000EFA080 /* FetchLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLikesRequest.swift; sourceTree = "<group>"; };
+		7C6B6AC62C443D3C00EFA080 /* LikesResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesResultModel.swift; sourceTree = "<group>"; };
 		7C6C19B02C40188500EE5A59 /* CollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
 		7C6C19B22C401F3100EE5A59 /* CollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewModel.swift; sourceTree = "<group>"; };
 		7C6C19C42C408ED600EE5A59 /* NftCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCellModel.swift; sourceTree = "<group>"; };
@@ -436,6 +440,7 @@
 				7C1FA1D82C3472A400D2A427 /* CatalogService.swift */,
 				7C6C19C62C4091D400EE5A59 /* CollectionService.swift */,
 				7C1FA1E32C347B8D00D2A427 /* FetchCatalogsRequest.swift */,
+				7C6B6AC42C443C3000EFA080 /* FetchLikesRequest.swift */,
 			);
 			path = CatalogServices;
 			sourceTree = "<group>";
@@ -460,6 +465,7 @@
 				7C6C19C82C40921B00EE5A59 /* NftResultModel.swift */,
 				7C6C19CA2C40922F00EE5A59 /* CartResponseModel.swift */,
 				7C6C19CC2C40924300EE5A59 /* UserProfileResponseModel.swift */,
+				7C6B6AC62C443D3C00EFA080 /* LikesResultModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -729,9 +735,11 @@
 				8B5D03692C25BE170096C8A1 /* ProfileViewController.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,
 				7C1FA1E42C347B8D00D2A427 /* FetchCatalogsRequest.swift in Sources */,
+				7C6B6AC72C443D3C00EFA080 /* LikesResultModel.swift in Sources */,
 				7CA9034A2C349FD700423E8F /* Typealias.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
 				7C1FA1D92C3472A400D2A427 /* CatalogService.swift in Sources */,
+				7C6B6AC52C443C3000EFA080 /* FetchLikesRequest.swift in Sources */,
 				7CA903532C34D8A500423E8F /* Constants.swift in Sources */,
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
 				7C6C19C52C408ED600EE5A59 /* NftCellModel.swift in Sources */,
