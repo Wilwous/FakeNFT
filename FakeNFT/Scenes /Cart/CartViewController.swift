@@ -114,6 +114,7 @@ final class CartViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] (_: [Nft]) in
                 self?.updateUI()
+                self?.updateCheckoutButtonState()
             }
             .store(in: &cancellables)
         
@@ -254,6 +255,11 @@ final class CartViewController: UIViewController {
         present(deleteVC, animated: true, completion: nil)
     }
     
+    private func updateCheckoutButtonState() {
+        let isCartEmpty = cartViewModel.nftsInCart.isEmpty
+        checkoutButton.isEnabled = !isCartEmpty
+    }
+    
     // MARK: - Actions
     
     @objc private func didTapSortButton() {
@@ -287,7 +293,6 @@ final class CartViewController: UIViewController {
         currencyAndPaymentVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(currencyAndPaymentVC, animated: true)
     }
-    
     
     @objc private func refreshData() {
         cartViewModel.loadCartItems(isPullToRefresh: true)
