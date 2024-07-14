@@ -28,6 +28,13 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
     private var userProfileContainer = UIView()
     private var profileTableView: ProfileTableView
 
+    private var isLoading: Bool = true {
+        didSet {
+            updateEditButtonVisibility()
+        }
+    }
+
+
     // MARK: - Initializer
 
     init(unifiedService: NftServiceCombine) {
@@ -201,6 +208,21 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         profileTableView.didMove(toParent: self)
     }
 
+    private func updateEditButtonVisibility() {
+        if isLoading {
+            navigationItem.rightBarButtonItem = nil
+        } else {
+            let rightBarItem = UIBarButtonItem(
+                image: UIImage(named: "edit"),
+                style: .plain,
+                target: self,
+                action: #selector(didTapEditButton)
+            )
+            rightBarItem.tintColor = .ypBlackDay
+            navigationItem.rightBarButtonItem = rightBarItem
+        }
+    }
+
     private func setupNavigationBar() {
         let rightBarItem = UIBarButtonItem(
             image: UIImage(named: "edit"),
@@ -210,6 +232,8 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         )
         rightBarItem.tintColor = .ypBlackDay
         navigationItem.rightBarButtonItem = rightBarItem
+        updateEditButtonVisibility() // Изначально скрываем иконку
+
     }
 
     @objc private func didTapEditButton() {
@@ -299,6 +323,7 @@ extension ProfileViewController {
 
     private func loadUserProfile() {
         ProgressHUD.show()
+        isLoading = true
         unifiedService.loadProfile(id: "1")
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -306,11 +331,13 @@ extension ProfileViewController {
                     break
                 case .failure(let error):
                     ProgressHUD.dismiss()
+                    self.isLoading = false
                     print("⛔️ Не удалось загрузить профиль: \(error)")
                 }
             }, receiveValue: { [weak self] profile in
                 self?.currentProfile = profile
                 self?.updateUI(with: profile)
+                self?.isLoading = false
             })
             .store(in: &cancellables)
     }
@@ -330,10 +357,12 @@ extension ProfileViewController {
                 }
                 self.updateProfileContainer()
                 ProgressHUD.dismiss()
+                self.isLoading = false
             }
         } else {
             updateProfileContainer()
             ProgressHUD.dismiss()
+            self.isLoading = false
         }
 
         profileTableView.myNFTsCount = profile.nfts.count
@@ -341,7 +370,6 @@ extension ProfileViewController {
         profileTableView.tableView.reloadData()
         updateProfileContainer()
     }
-
 
     private func updateProfileContainer() {
         userProfileContainer.removeFromSuperview()
