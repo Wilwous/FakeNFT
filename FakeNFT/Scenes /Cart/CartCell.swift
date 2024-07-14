@@ -135,6 +135,7 @@ final class CartCell: UITableViewCell, ReuseIdentifying {
     
     private func setupUI() {
         contentView.addSubview(mainStackView)
+        contentView.backgroundColor = .ypWhiteDay
         
         [nftImageView, verticalStackView, deleteItemButton, mainStackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
