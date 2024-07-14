@@ -100,9 +100,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
                     collectionsToSort: convertedCollections
                 )
                 self.hideLoadingHandler?()
-            case .failure(
-                let error
-            ):
+            case .failure(let error):
                 self.hideLoadingHandler?()
                 print(
                     "Error fetching collections: \(error)"

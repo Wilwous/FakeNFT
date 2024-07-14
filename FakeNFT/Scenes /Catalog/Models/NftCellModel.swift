@@ -14,4 +14,5 @@ struct NftCellModel {
     var isLiked: Bool
     let price: Double
     let isInCart: Bool
+    let id: String
 }

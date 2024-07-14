@@ -33,7 +33,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     
     // MARK: - Public Properties
     let collectionInformation: NftCollection
-    var websiteLink = "https://practicum.yandex.ru/ios-developer/?from=catalog"
+    var websiteLink = "https://rroll.to/iHgSMg"
     
     // MARK: - Private Properties
     
@@ -76,18 +76,12 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     // MARK: - Private Methods
     
     private func fetchData(
-        completion: @escaping (
-            Result<
-            [NftCellModel],
-            Error
-            >
-        ) -> Void
-    ) {
+        completion: @escaping (Result<[NftCellModel], Error>
+        ) -> Void) {
+        
         service.getMyCart { [weak self] result in
             switch result {
-            case .success(
-                let collections
-            ):
+            case .success(let collections):
                 var fetchedNfts: [NftCellModel] = []
                 let group = DispatchGroup()
                 
@@ -96,13 +90,9 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                         self?.numberOfNftsToLoad ?? 0
                     ) {
                         group.enter()
-                        self?.service.getNftById(
-                            id: id
-                        ) { result in
+                        self?.service.getNftById(id: id) { result in
                             switch result {
-                            case .success(
-                                let nftResult
-                            ):
+                            case .success(let nftResult):
                                 let nft = NftCellModel(
                                     cover: nftResult.images.first!,
                                     name: nftResult.name,
@@ -113,83 +103,37 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                                     price: nftResult.price,
                                     isInCart: self?.checkIfNftIsInCart(
                                         id: nftResult.id
-                                    ) ?? false
+                                    ) ?? false, 
+                                    id: nftResult.id
                                 )
-                                fetchedNfts.append(
-                                    nft
-                                )
-                            case .failure(
-                                let error
-                            ):
-                                print(
-                                    "Error fetching NFT by ID: \(error)"
-                                )
-                                completion(
-                                    .failure(
-                                        error
-                                    )
-                                )
+                                fetchedNfts.append(nft)
+                            case .failure(let error):
+                                print("Error fetching NFT by ID: \(error)")
+                                completion(.failure(error))
                             }
                             group.leave()
                         }
                     }
                 }
                 
-                group.notify(
-                    queue: .main
-                ) {
-                    completion(
-                        .success(
-                            fetchedNfts
-                        )
-                    )
+                group.notify(queue: .main) {
+                    completion(.success(fetchedNfts))
                 }
             case .failure(
-                let error
-            ):
-                print(
-                    "Error fetching collections: \(error)"
-                )
+                let error): print("Error fetching collections: \(error)")
                 self?.handleResult(
-                    result: .failure(
-                        error
-                    ),
-                    completion: completion
-                )
+                    result: .failure(error), completion: completion)
             }
         }
     }
     
     private func handleResult<T>(
-        result: Result<
-        T,
-        Error
-        >,
-        completion: @escaping (
-            Result<
-            T,
-            Error
-            >
-        ) -> Void
-    ) {
+        result: Result<T, Error>, completion: @escaping (Result <T, Error>
+        ) -> Void) {
         DispatchQueue.main.async {
             switch result {
-            case .success(
-                let succes
-            ):
-                completion(
-                    .success(
-                        succes
-                    )
-                )
-            case .failure(
-                let error
-            ):
-                completion(
-                    .failure(
-                        error
-                    )
-                )
+            case .success(let succes): completion(.success(succes))
+            case .failure(let error): completion(.failure(error))
             }
         }
     }
@@ -199,67 +143,35 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     ) {
         service.getMyFavourites { result in
             switch result {
-            case .success(
-                let userInfo
-            ):
-                completion(
-                    .success(
-                        userInfo
-                    )
-                )
-            case .failure(
-                let error
-            ):
-                completion(
-                    .failure(
-                        error
-                    )
-                )
+            case .success(let userInfo): completion(.success(userInfo))
+            case .failure(let error): completion(.failure(error))
             }
         }
     }
     
     private func getNfts(
         completion: @escaping (
-            Result<
-            [NftCellModel],
-            Error
-            >
+            Result<[NftCellModel], Error>
         ) -> Void
     ) {
         let group = DispatchGroup()
         var fetchedNfts: [NftDetailsResponseModel] = []
         
         for id in collectionInformation.nfts.prefix(
-            numberOfNftsToLoad
-        ) {
+            numberOfNftsToLoad) {
             group.enter()
             service.getNftById(
                 id: id
             ) { result in
                 switch result {
-                case .success(
-                    let nftResult
-                ):
-                    fetchedNfts.append(
-                        nftResult
-                    )
-                case .failure(
-                    let error
-                ):
-                    completion(
-                        .failure(
-                            error
-                        )
-                    )
+                case .success(let nftResult): fetchedNfts.append(nftResult)
+                case .failure(let error): completion(.failure(error))
                 }
                 group.leave()
             }
         }
         
-        group.notify(
-            queue: .main
-        ) {
+        group.notify(queue: .main) {
             let allNfts = fetchedNfts.map {
                 return NftCellModel(
                     cover: $0.images.first!,
@@ -267,17 +179,15 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                     stars: $0.rating,
                     isLiked: self.checkIfNftIsLiked(
                         id: $0.id
-                    ), price: $0.price,
+                    ),
+                    price: $0.price,
                     isInCart: self.checkIfNftIsInCart(
                         id: $0.id
-                    )
+                    ),
+                    id: $0.id
                 )
             }
-            completion(
-                .success(
-                    allNfts
-                )
-            )
+            completion(.success(allNfts))
         }
     }
     

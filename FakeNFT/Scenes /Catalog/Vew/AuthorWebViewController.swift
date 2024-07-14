@@ -87,7 +87,6 @@ final class AuthorWebViewController: UIViewController, LoadingView {
             animated: true,
             completion: nil
         )
-        print("Network error occurred")
     }
     
     // MARK: - Setup View

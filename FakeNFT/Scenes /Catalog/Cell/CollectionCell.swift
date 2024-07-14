@@ -25,20 +25,11 @@ final class CollectionCell: UICollectionViewCell {
     }()
     
     private lazy var likeButton: UIButton = {
-        let button = UIButton(
-            type: .custom
-        )
-        button.setImage(
-            UIImage(
-                named: "like_no_active"
-            ),
-            for: .normal
-        )
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "like_no_active"), for: .normal)
         button.addTarget(
             CollectionCell.self,
-            action: #selector(
-                didLikeButtonTapped
-            ),
+            action: #selector(didLikeButtonTapped),
             for: .touchUpInside
         )
         
@@ -48,16 +39,11 @@ final class CollectionCell: UICollectionViewCell {
     private lazy var starsImages: [UIImageView] = {
         var stars: [UIImageView] = []
         for i in 1...5 {
-            if let starImage = UIImage(
-                named: "star_no_active"
-            ) {
-                stars.append(
-                    UIImageView(
-                        image: starImage
-                    )
-                )
+            if let starImage = UIImage(named: "star_no_active") {
+                stars.append(UIImageView(image: starImage))
             }
         }
+        
         return stars
     }()
     
@@ -66,9 +52,7 @@ final class CollectionCell: UICollectionViewCell {
         label.textAlignment = .left
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
-        label.font = .boldSystemFont(
-            ofSize: 17
-        )
+        label.font = .boldSystemFont(ofSize: 17)
         
         return label
     }()
@@ -76,27 +60,17 @@ final class CollectionCell: UICollectionViewCell {
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = .systemFont(
-            ofSize: 10,
-            weight: .medium
-        )
+        label.font = .systemFont(ofSize: 10, weight: .medium)
         
         return label
     }()
     
     private lazy var cartButton: UIButton = {
         var button = UIButton(type: .custom)
-        button.setImage(
-            UIImage(
-                named: "item_add"
-            ),
-            for: .normal
-        )
+        button.setImage(UIImage(named: "item_add"),for: .normal)
         button.addTarget(
             self,
-            action: #selector(
-                didCartButtonTapped
-            ),
+            action: #selector(didCartButtonTapped),
             for: .touchUpInside
         )
         
@@ -150,9 +124,7 @@ final class CollectionCell: UICollectionViewCell {
                 nftImageView.kf.indicatorType = .activity
                 nftImageView.kf.setImage(
                     with: imageUrl,
-                    placeholder: UIImage(
-                        named: "Card.png"
-                    )
+                    placeholder: UIImage(named: "Card.png")
                 )
                 nftImageView.contentMode = .scaleAspectFill
                 nftImageView.layer.cornerRadius = 16
@@ -180,16 +152,12 @@ final class CollectionCell: UICollectionViewCell {
         if isInCart {
             cartButton.setImage(
                 UIImage(
-                    named: "item_add"
-                ),
-                for: .normal
+                    named: "item_add"), for: .normal
             )
         } else {
             cartButton.setImage(
                 UIImage(
-                    named: "item_delete"
-                ),
-                for: .normal
+                    named: "item_delete"), for: .normal
             )
         }
     }
@@ -200,16 +168,12 @@ final class CollectionCell: UICollectionViewCell {
         if isLiked {
             likeButton.setImage(
                 UIImage(
-                    named: "like_active"
-                ),
-                for: .normal
+                    named: "like_active"), for: .normal
             )
         } else {
             likeButton.setImage(
                 UIImage(
-                    named: "like_no_active"
-                ),
-                for: .normal
+                    named: "like_no_active"),for: .normal
             )
         }
     }

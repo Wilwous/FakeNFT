@@ -18,9 +18,7 @@ final class CatalogCell: UITableViewCell {
     // MARK: - UI Components
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(
-            style: .medium
-        )
+        let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = true
         
         return indicator
