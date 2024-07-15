@@ -145,6 +145,7 @@ final class FavoritesNFTsViewController: UIViewController, FavoritesNFTsCollecti
         userDefaults.set(favoriteNFTs, forKey: "FavoriteNFTs")
         nfts.remove(at: indexPath.row)
         collectionView.deleteItems(at: [indexPath])
+
         NotificationCenter.default.post(name: .favoriteStatusChanged, object: nft.id)
     }
 

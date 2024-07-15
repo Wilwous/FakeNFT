@@ -66,7 +66,11 @@ final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDeleg
         deleteItems(at: [indexPath])
         itemsDelegate?.didUpdateItems(items)
         
+        
         let updatedLikes = items.map { $0.id }
+        
+        UserDefaults.standard.set(updatedLikes, forKey: "FavoriteNFTs")
+        
         (self.superview?.findViewController() as? FavoritesNFTsViewController)?.updateProfileLikes(profileId: "1", likes: updatedLikes)
     }
     
@@ -91,4 +95,3 @@ extension UIView {
         }
     }
 }
-

@@ -17,6 +17,7 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     private let nftService: NftServiceCombine
     private let refreshControl = UIRefreshControl()
 
+
     private let noNFTLabel: UILabel = {
         let label = UILabel()
         label.text = "У Вас ещё нет NFT"

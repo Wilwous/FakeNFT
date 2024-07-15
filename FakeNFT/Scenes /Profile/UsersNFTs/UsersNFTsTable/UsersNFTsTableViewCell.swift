@@ -109,7 +109,6 @@ final class UsersNFTsTableViewCell: UITableViewCell {
 
         let userDefaults = UserDefaults.standard
         var favoriteNFTs = userDefaults.array(forKey: "FavoriteNFTs") as? [String] ?? []
-
         if isLiked {
             favoriteNFTs.append(nft.id)
         } else {
