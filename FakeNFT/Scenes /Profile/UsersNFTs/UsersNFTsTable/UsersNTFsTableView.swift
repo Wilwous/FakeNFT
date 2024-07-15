@@ -9,13 +9,8 @@ import UIKit
 
 final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
 
-    var nfts: [(
-        imageUrl: URL?,
-        title: String,
-        rating: Int,
-        author: String,
-        priceValue: String
-    )] = []
+    var nfts: [Nft] = []
+    weak var likeDelegate: UsersNFTsTableViewCellDelegate?
 
     init() {
         super.init(frame: .zero, style: .plain)
@@ -37,7 +32,6 @@ final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UsersNFTsTableViewCell.identifier, for: indexPath) as? UsersNFTsTableViewCell else {
             return UITableViewCell()
         }
@@ -46,7 +40,7 @@ final class UsersNTFsTableView: UITableView, UITableViewDataSource, UITableViewD
         cell.backgroundColor = .ypWhiteDay
         let nft = nfts[indexPath.row]
         cell.configure(with: nft)
+        cell.delegate = likeDelegate
         return cell
     }
 }
-

@@ -58,7 +58,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         addProfileTableView()
         setupNavigationBar()
         loadUserProfile()
-        // addTestLikes() // метод для имитации действия пользователя в каталоге
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -67,16 +66,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
     }
 
     //MARK: - Private Methods
-
-    private func addTestLikes() {
-        let likes = [
-            "f380f245-0264-4b42-8e7e-c4486e237504",
-            "594aaf01-5962-4ab7-a6b5-470ea37beb93",
-            "b3907b86-37c4-4e15-95bc-7f8147a9a660",
-            "5093c01d-e79e-4281-96f1-76db5880ba70"
-        ]
-        updateProfileLikes(profileId: "1", likes: likes)
-    }
 
     private func setupUserInfoView() {
         userProfileContainer = createUserProfileView()
@@ -135,7 +124,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
             userNameLabel.centerYAnchor.constraint(equalTo: avatarImage.centerYAnchor),
             userNameLabel.trailingAnchor.constraint(equalTo: userProfileView.trailingAnchor)
         ])
-
         return userProfileView
     }
 
@@ -152,7 +140,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         userSiteLabel.text = userSite
         userSiteLabel.font = .caption1
         userSiteLabel.textColor = .ypBlue
-        userSiteLabel.numberOfLines = 1
+        userSiteLabel.numberOfLines = 3
         userSiteLabel.isUserInteractionEnabled = true
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSiteTap))
@@ -172,8 +160,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
             userSiteLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 12),
             userSiteLabel.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor),
             userSiteLabel.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor),
-            userSiteLabel.bottomAnchor.constraint(equalTo: descriptionView.bottomAnchor),
-            userSiteLabel.heightAnchor.constraint(equalToConstant: 20)
+            userSiteLabel.bottomAnchor.constraint(equalTo: descriptionView.bottomAnchor)
         ])
         return descriptionView
     }
@@ -236,7 +223,6 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         rightBarItem.tintColor = .ypBlackDay
         navigationItem.rightBarButtonItem = rightBarItem
         updateEditButtonVisibility()
-
     }
 
     // MARK: - EditProfileDelegate

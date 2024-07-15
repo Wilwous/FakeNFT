@@ -15,9 +15,9 @@ final class FavoritesNFTsViewController: UIViewController, FavoritesNFTsCollecti
     // MARK: - Properties
 
     private var cancellables = Set<AnyCancellable>()
-    private let unifiedService: NftServiceCombine
     private var nfts: [Nft] = []
-    private let refreshControl = UIRefreshControl() 
+    private let unifiedService: NftServiceCombine
+    private let refreshControl = UIRefreshControl()
 
     private let noNFTLabel: UILabel = {
         let label = UILabel()
@@ -129,6 +129,23 @@ final class FavoritesNFTsViewController: UIViewController, FavoritesNFTsCollecti
             collectionView.isHidden = false
             noNFTLabel.isHidden = true
         }
+    }
+
+    func didTapLikeButton(in cell: FavoritesNFTsCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        let nft = nfts[indexPath.row]
+
+        let userDefaults = UserDefaults.standard
+        var favoriteNFTs = userDefaults.array(forKey: "FavoriteNFTs") as? [String] ?? []
+
+        if favoriteNFTs.contains(nft.id) {
+            favoriteNFTs.removeAll { $0 == nft.id }
+        }
+
+        userDefaults.set(favoriteNFTs, forKey: "FavoriteNFTs")
+        nfts.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
+        NotificationCenter.default.post(name: .favoriteStatusChanged, object: nft.id)
     }
 
     func didUpdateItems(_ items: [Nft]) {

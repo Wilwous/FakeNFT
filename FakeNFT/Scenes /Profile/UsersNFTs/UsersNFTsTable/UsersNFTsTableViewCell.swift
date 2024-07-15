@@ -7,11 +7,18 @@
 
 import Kingfisher
 import UIKit
+import Combine
+
+protocol UsersNFTsTableViewCellDelegate: AnyObject {
+    func didTapLikeButton(nft: Nft, isLiked: Bool)
+}
 
 final class UsersNFTsTableViewCell: UITableViewCell {
-
     static let identifier = "UsersNFTsTableViewCell"
-    private var isLiked = false
+    internal var isLiked = false
+    internal var nft: Nft!
+
+    weak var delegate: UsersNFTsTableViewCellDelegate?
 
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
@@ -47,7 +54,7 @@ final class UsersNFTsTableViewCell: UITableViewCell {
         label.font = .caption2
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping 
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
 
@@ -96,10 +103,23 @@ final class UsersNFTsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func likeTapped() {
+    @objc func likeTapped() {
         isLiked.toggle()
         likeImageView.image = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_no_active")
-        print("Лайк \(isLiked ? "поставлен ❤️" : "отменён 💔")")
+
+        let userDefaults = UserDefaults.standard
+        var favoriteNFTs = userDefaults.array(forKey: "FavoriteNFTs") as? [String] ?? []
+
+        if isLiked {
+            favoriteNFTs.append(nft.id)
+        } else {
+            favoriteNFTs.removeAll { $0 == nft.id }
+        }
+
+        userDefaults.set(favoriteNFTs, forKey: "FavoriteNFTs")
+        NotificationCenter.default.post(name: .favoriteStatusChanged, object: nft.id)
+
+        delegate?.didTapLikeButton(nft: nft, isLiked: isLiked)
     }
 
     private func setupUI() {
@@ -165,23 +185,27 @@ final class UsersNFTsTableViewCell: UITableViewCell {
         authorLabel.attributedText = attributedString
     }
 
-    func configure(
-        with nft: (
-            imageUrl: URL?,
-            title: String,
-            rating: Int,
-            author: String,
-            priceValue: String
-        )
-    ) {
-        if let url = nft.imageUrl {
+    func configure(with nft: Nft) {
+        self.nft = nft
+        if let url = nft.images.first {
             nftImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"))
         } else {
             nftImageView.image = UIImage(named: "placeholder")
         }
-        titleLabel.text = nft.title
+        titleLabel.text = nft.name
         ratingView.viewModel.setRating(nft.rating)
         authorLabelFormatter(author: nft.author)
-        priceValueLabel.text = nft.priceValue
+        priceValueLabel.text = "\(nft.price) ETH"
+
+        let userDefaults = UserDefaults.standard
+        let favoriteNFTs = userDefaults.array(forKey: "FavoriteNFTs") as? [String] ?? []
+        isLiked = favoriteNFTs.contains(nft.id)
+        likeImageView.image = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_no_active")
     }
+}
+
+// MARK: - Notification Name Extension
+
+extension Notification.Name {
+    static let favoriteStatusChanged = Notification.Name("favoriteStatusChanged")
 }

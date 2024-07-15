@@ -9,9 +9,13 @@ import Combine
 import UIKit
 import ProgressHUD
 
-final class UsersNFTsViewController: UIViewController {
+final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDelegate {
 
     // MARK: - Properties
+
+    private var cancellables = Set<AnyCancellable>()
+    private let nftService: NftServiceCombine
+    private let refreshControl = UIRefreshControl()
 
     private let noNFTLabel: UILabel = {
         let label = UILabel()
@@ -22,10 +26,11 @@ final class UsersNFTsViewController: UIViewController {
         return label
     }()
 
-    private let nftsTableView = UsersNTFsTableView()
-    private var cancellables = Set<AnyCancellable>()
-    private let nftService: NftServiceCombine
-    private let refreshControl = UIRefreshControl()
+    private lazy var nftsTableView: UsersNTFsTableView = {
+        let tableView = UsersNTFsTableView()
+        tableView.likeDelegate = self
+        return tableView
+    }()
 
     init(nftService: NftServiceCombine) {
         self.nftService = nftService
@@ -41,8 +46,9 @@ final class UsersNFTsViewController: UIViewController {
         setupNavigationBar()
         setupUI()
         setupConstraints()
-        setupRefreshControl() 
+        setupRefreshControl()
         loadUsersNFTs(forProfileId: "1")
+        setupBindings()
     }
 
     // MARK: - Setup Navigation Bar
@@ -76,6 +82,19 @@ final class UsersNFTsViewController: UIViewController {
         transition.type = .push
         transition.subtype = .fromLeft
         view.window!.layer.add(transition, forKey: kCATransition)
+    }
+
+    private func setupBindings() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoriteStatusChanged(_:)),
+            name: .favoriteStatusChanged,
+            object: nil)
+    }
+
+    @objc private func favoriteStatusChanged(_ notification: Notification) {
+        guard let nftId = notification.object as? String else { return }
+        nftsTableView.reloadData()
     }
 
     @objc private func leftButtonTapped() {
@@ -122,10 +141,44 @@ final class UsersNFTsViewController: UIViewController {
     @objc private func refreshNFTs() {
         loadUsersNFTs(forProfileId: "1")
     }
+
+    // MARK: - UsersNFTsTableViewCellDelegate
+
+    func didTapLikeButton(nft: Nft, isLiked: Bool) {
+        var favoriteNFTs: [String] = UserDefaults.standard.array(forKey: "FavoriteNFTs") as? [String] ?? []
+        if isLiked {
+            favoriteNFTs.append(nft.id)
+        } else {
+            favoriteNFTs.removeAll { $0 == nft.id }
+        }
+        UserDefaults.standard.set(favoriteNFTs, forKey: "FavoriteNFTs")
+
+        updateProfileLikes(profileId: "1", likes: favoriteNFTs)
+    }
+
+    private func updateProfileLikes(profileId: String, likes: [String]) {
+        ProgressHUD.show()
+        print("Обновление лайков. Количество лайков: \(likes.count)")
+
+        let params = UpdateProfileParams(profileId: profileId, likes: likes)
+
+        nftService.updateProfile(params: params)
+            .sink(receiveCompletion: { completion in
+                ProgressHUD.dismiss()
+                switch completion {
+                case .finished:
+                    print("✅ Лайки успешно обновлены")
+                case .failure(let error):
+                    print("⛔️ Ошибка при обновлении лайков: \(error)")
+                }
+            }, receiveValue: { updatedProfile in
+                print("✅ Обновленный профиль: \(updatedProfile)")
+            })
+            .store(in: &cancellables)
+    }
 }
 
 extension UsersNFTsViewController {
-
     private func loadUsersNFTs(forProfileId profileId: String) {
         if !refreshControl.isRefreshing {
             ProgressHUD.show()
@@ -143,17 +196,9 @@ extension UsersNFTsViewController {
                 }
             }, receiveValue: { [weak self] nfts in
                 print("✅ Получены данные NFT для профиля: \(nfts)")
-                self?.nftsTableView.nfts = nfts.map {
-                    (
-                        imageUrl: URL(string: $0.images.first?.absoluteString ?? ""),
-                        title: $0.name,
-                        rating: $0.rating,
-                        author: $0.author,
-                        priceValue: "\($0.price) ETH"
-                    )
-                }
+                self?.nftsTableView.nfts = nfts
                 self?.nftsTableView.reloadData()
-                self?.noNFTLabel.isHidden = !self!.nftsTableView.nfts.isEmpty
+                self?.noNFTLabel.isHidden = !(self?.nftsTableView.nfts.isEmpty ?? true)
             })
             .store(in: &cancellables)
     }
