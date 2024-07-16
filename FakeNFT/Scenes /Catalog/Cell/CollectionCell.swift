@@ -13,6 +13,7 @@ final class CollectionCell: UICollectionViewCell {
     // MARK: - Сlosure
     
     var didLikeTappedHandler: ((String) -> ())?
+    var didCartTappedHandler: ((String) -> ())?
     
     // MARK: - Static Properties
     
@@ -124,6 +125,11 @@ final class CollectionCell: UICollectionViewCell {
         likeButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
+    func updateCartButton(isInCart: Bool) {
+        let imageName = isInCart ? "item_add" : "item_delete"
+        cartButton.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
     // MARK: Private Methods
     
     private func loadImage(
@@ -154,11 +160,6 @@ final class CollectionCell: UICollectionViewCell {
                 starsImages[i].image = starImage
             }
         }
-    }
-    
-    private func updateCartButton(isInCart: Bool) {
-        let imageName = isInCart ? "item_add" : "item_delete"
-        cartButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
     // MARK: - Setup View
@@ -311,7 +312,8 @@ final class CollectionCell: UICollectionViewCell {
     }
     
     @objc func didCartButtonTapped() {
-        // TODO: Логика добавления в корзину
+        guard let nftId = nftId else { return }
+        didCartTappedHandler?(nftId)
     }
 }
 

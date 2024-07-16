@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class CollectionViewController: UIViewController, LoadingView {
     
@@ -132,17 +133,17 @@ final class CollectionViewController: UIViewController, LoadingView {
     private func bindViewModel() {
         viewModel.showLoadingHandler = { [weak self] in
             guard let self = self else { return }
-            self.showLoading()
             self.view.isUserInteractionEnabled = false
+            ProgressHUD.show()
         }
         
-        viewModel.hideLoadingHandler = { [weak self] in
+        viewModel.showSuccessHandler = { [weak self] in
             guard let self = self else { return }
-            self.hideLoading()
             self.view.isUserInteractionEnabled = true
+            ProgressHUD.showSucceed(delay: 0.5)
         }
         
-        viewModel.errorHandler = { [weak self] in
+        viewModel.showErrorHandler = { [weak self] in
             guard let self = self else { return }
             self.showErrorAlert()
         }
@@ -388,7 +389,12 @@ extension CollectionViewController: UICollectionViewDataSource {
         cell.didLikeTappedHandler = { [weak self] nftId in
             self?.viewModel.didLikeButtonTapped(nftId: nftId) { isLiked in
                 cell.updateLikeButton(isLiked: isLiked)
-                collectionView.reloadItems(at: [indexPath])
+            }
+        }
+        
+        cell.didCartTappedHandler = { [weak self] nftId in
+            self?.viewModel.didCartButtonTapped(nftId: nftId) { isInCart in
+                cell.updateCartButton(isInCart: isInCart)
             }
         }
         
