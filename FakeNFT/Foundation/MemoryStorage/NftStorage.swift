@@ -7,9 +7,11 @@ protocol NftStorage: AnyObject {
 
 // Пример простого класса, который сохраняет данные из сети
 final class NftStorageImpl: NftStorage {
-    private var storage: [String: Nft] = [:]
-
+    
+    static let shared = NftStorageImpl()
+    
     private let syncQueue = DispatchQueue(label: "sync-nft-queue")
+    private var storage: [String: Nft] = [:]
 
     func saveNft(_ nft: Nft) {
         syncQueue.async { [weak self] in

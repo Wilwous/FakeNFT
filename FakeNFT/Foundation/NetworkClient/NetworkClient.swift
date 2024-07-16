@@ -117,17 +117,25 @@ struct DefaultNetworkClient: NetworkClient {
         
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
-        
+
         if let authToken = request.token {
             urlRequest.setValue(authToken, forHTTPHeaderField: RequestConstants.tokenKey)
         }
-        
+
         if let dto = request.dto {
             urlRequest.setValue(RequestConstants.acceptValue, forHTTPHeaderField: RequestConstants.acceptKey)
             urlRequest.setValue(RequestConstants.contentTypeValue, forHTTPHeaderField: RequestConstants.contentTypeKey)
             urlRequest.httpBody = dto as? Data
         }
-        
+
+        if request.httpMethod != .get, let body = request.token {
+            urlRequest.setValue(RequestConstants.contentTypeValue, forHTTPHeaderField: RequestConstants.contentTypeKey)
+            urlRequest.httpBody = body.data(using: .utf8)
+        }
+
+        urlRequest.setValue(RequestConstants.tokenValue, forHTTPHeaderField: RequestConstants.tokenKey)
+        urlRequest.setValue(RequestConstants.acceptValue, forHTTPHeaderField: RequestConstants.acceptKey)
+
         return urlRequest
     }
     
