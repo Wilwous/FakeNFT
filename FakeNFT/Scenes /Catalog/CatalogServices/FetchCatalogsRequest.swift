@@ -14,11 +14,12 @@ struct FetchCatalogsRequest: NetworkRequest {
     // MARK: - Public Properties
     
     let baseUrl = RequestConstants.baseURL
-    var httpBody: String?
+    var token: String?
     
     var endpoint: URL? {
         URL(string: "\(baseUrl)/api/v1/collections")
     }
+    
     var httpMethod: HttpMethod {
         .get
     }

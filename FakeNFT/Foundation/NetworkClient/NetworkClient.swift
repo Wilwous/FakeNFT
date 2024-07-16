@@ -124,7 +124,11 @@ struct DefaultNetworkClient: NetworkClient {
             urlRequest.httpBody = dtoEncoded
         }
         
-        if let body = request.httpBody {
+        if let authToken = request.token {
+            urlRequest.setValue(authToken, forHTTPHeaderField: RequestConstants.tokenKey)
+        }
+        
+        if request.httpMethod != .get, let body = request.token {
              urlRequest.setValue(RequestConstants.contentTypeValue, forHTTPHeaderField: RequestConstants.contentTypeKey)
              urlRequest.httpBody = body.data(using: .utf8)
          }

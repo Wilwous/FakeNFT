@@ -14,7 +14,7 @@ struct FetchLikesRequest: NetworkRequest {
     // MARK: - Public Properties
     
     let baseUrl = RequestConstants.baseURL
-    var httpBody: String?
+    var token: String?
     
     var endpoint: URL? {
         URL(string: "\(baseUrl)/api/v1/profile/1")
@@ -26,7 +26,7 @@ struct FetchLikesRequest: NetworkRequest {
     
     // MARK: - Initializers
     
-    init(httpBody: String) {
-        self.httpBody = httpBody
+    init(token: String) {
+        self.token = token
     }
 }

@@ -14,7 +14,7 @@ struct GetCartRequest: NetworkRequest {
     // MARK: - Public Properties
     
     let baseUrl = RequestConstants.baseURL
-    var httpBody: String?
+    var token: String?
     
     var endpoint: URL? {
         URL(string: "\(baseUrl)/api/v1/orders/1")

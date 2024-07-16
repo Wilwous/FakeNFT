@@ -55,7 +55,7 @@ final class CollectionService {
     }
     
     func getMyFavourites(completion: @escaping ProfileInfoResultCompletion) {
-        let request = FetchLikesRequest(httpBody: "")
+        let request = FetchLikesRequest(token: "")
         self.networkClient.send(request: request) { result in
             switch result {
             case .success(let data):
@@ -89,7 +89,7 @@ final class CollectionService {
                     newLikes.append(likeId)
                 }
                 let convertedLikes = newLikes.joined(separator: ",")
-                let request = FetchLikesRequest(httpBody: "likes=\(convertedLikes)")
+                let request = FetchLikesRequest(token: "likes=\(convertedLikes)")
                 
                 self.networkClient.send(
                     request: request,
@@ -123,7 +123,7 @@ final class CollectionService {
                     newCart.append(nftId)
                 }
                 let convertedCart = newCart.isEmpty ? "null" : newCart.joined(separator: ",")
-                let request = UpdateCartRequest(httpBody: "nfts=\(convertedCart)")
+                let request = UpdateCartRequest(token: "nfts=\(convertedCart)")
                 
                 self?.networkClient.send(
                     request: request,
