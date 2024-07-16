@@ -8,6 +8,6 @@
 import Foundation
 
 struct CartResponseModel: Decodable {
-    let id: String
     let nfts: [String]
+    let id: String
 }

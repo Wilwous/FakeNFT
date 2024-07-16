@@ -11,10 +11,7 @@ final class AlertPresenter {
     
     // MARK: - Public Methods
     
-    static func show(
-        in vc: UIViewController,
-        model: AlertModel
-    ) {
+    static func show(in vc: UIViewController, model: AlertModel) {
         let alert = UIAlertController(
             title: nil,
             message: model.message,
@@ -28,34 +25,22 @@ final class AlertPresenter {
             model.sortNameCompletion()
         }
         
-        alert.addAction(
-            nameSort
-        )
+        alert.addAction(nameSort)
         
         let quantitySort = UIAlertAction(
             title: model.quantitySortText,
             style: .default
-        ) { _ in
-            model.sortQuantityCompletion()
+        ) { _ in model.sortQuantityCompletion()
         }
         
-        alert.addAction(
-            quantitySort
-        )
+        alert.addAction(quantitySort)
         
         let cancelAction = UIAlertAction(
             title: model.cancelButtonText,
             style: .cancel
         )
-        
-        alert.addAction(
-            cancelAction
-        )
-        
-        vc.present(
-            alert,
-            animated: true
-        )
+        alert.addAction(cancelAction)
+        vc.present(alert, animated: true)
     }
     
     // MARK: - Initializer

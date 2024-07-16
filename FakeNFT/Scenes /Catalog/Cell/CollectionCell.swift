@@ -10,9 +10,18 @@ import Kingfisher
 
 final class CollectionCell: UICollectionViewCell {
     
+    // MARK: - Сlosure
+    
+    var didLikeTappedHandler: ((String) -> ())?
+    var didCartTappedHandler: ((String) -> ())?
+    
     // MARK: - Static Properties
     
     static let identifier = "CollectionCell"
+    
+    // MARK: - Private Properties
+    
+    private var nftId: String?
     
     // MARK: - UI Components
     
@@ -25,20 +34,11 @@ final class CollectionCell: UICollectionViewCell {
     }()
     
     private lazy var likeButton: UIButton = {
-        let button = UIButton(
-            type: .custom
-        )
-        button.setImage(
-            UIImage(
-                named: "like_no_active"
-            ),
-            for: .normal
-        )
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "like_no_active"), for: .normal)
         button.addTarget(
-            CollectionCell.self,
-            action: #selector(
-                didLikeButtonTapped
-            ),
+            self,
+            action: #selector(didLikeButtonTapped),
             for: .touchUpInside
         )
         
@@ -48,16 +48,11 @@ final class CollectionCell: UICollectionViewCell {
     private lazy var starsImages: [UIImageView] = {
         var stars: [UIImageView] = []
         for i in 1...5 {
-            if let starImage = UIImage(
-                named: "star_no_active"
-            ) {
-                stars.append(
-                    UIImageView(
-                        image: starImage
-                    )
-                )
+            if let starImage = UIImage(named: "star_no_active") {
+                stars.append(UIImageView(image: starImage))
             }
         }
+        
         return stars
     }()
     
@@ -66,9 +61,7 @@ final class CollectionCell: UICollectionViewCell {
         label.textAlignment = .left
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
-        label.font = .boldSystemFont(
-            ofSize: 17
-        )
+        label.font = .boldSystemFont(ofSize: 17)
         
         return label
     }()
@@ -76,27 +69,17 @@ final class CollectionCell: UICollectionViewCell {
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = .systemFont(
-            ofSize: 10,
-            weight: .medium
-        )
+        label.font = .systemFont(ofSize: 10, weight: .medium)
         
         return label
     }()
     
     private lazy var cartButton: UIButton = {
         var button = UIButton(type: .custom)
-        button.setImage(
-            UIImage(
-                named: "item_add"
-            ),
-            for: .normal
-        )
+        button.setImage(UIImage(named: "item_add"),for: .normal)
         button.addTarget(
             self,
-            action: #selector(
-                didCartButtonTapped
-            ),
+            action: #selector(didCartButtonTapped),
             for: .touchUpInside
         )
         
@@ -134,6 +117,17 @@ final class CollectionCell: UICollectionViewCell {
         updateRating(rating: model.stars)
         updateCartButton(isInCart: model.isInCart)
         updateLikeButton(isLiked: model.isLiked)
+        nftId = model.id
+    }
+    
+    func updateLikeButton(isLiked: Bool) {
+        let imageName = isLiked ? "like_active" : "like_no_active"
+        likeButton.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
+    func updateCartButton(isInCart: Bool) {
+        let imageName = isInCart ? "item_add" : "item_delete"
+        cartButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
     // MARK: Private Methods
@@ -150,9 +144,7 @@ final class CollectionCell: UICollectionViewCell {
                 nftImageView.kf.indicatorType = .activity
                 nftImageView.kf.setImage(
                     with: imageUrl,
-                    placeholder: UIImage(
-                        named: "Card.png"
-                    )
+                    placeholder: UIImage(named: "Card.png")
                 )
                 nftImageView.contentMode = .scaleAspectFill
                 nftImageView.layer.cornerRadius = 16
@@ -162,55 +154,11 @@ final class CollectionCell: UICollectionViewCell {
         }
     }
     
-    private func updateRating(
-        rating: Int
-    ) {
+    private func updateRating(rating: Int) {
         for i in 0..<rating {
-            if let starImage = UIImage(
-                named: "star_active"
-            ) {
+            if let starImage = UIImage(named: "star_active") {
                 starsImages[i].image = starImage
             }
-        }
-    }
-    
-    private func updateCartButton(
-        isInCart: Bool
-    ) {
-        if isInCart {
-            cartButton.setImage(
-                UIImage(
-                    named: "item_add"
-                ),
-                for: .normal
-            )
-        } else {
-            cartButton.setImage(
-                UIImage(
-                    named: "item_delete"
-                ),
-                for: .normal
-            )
-        }
-    }
-    
-    private func updateLikeButton(
-        isLiked: Bool
-    ) {
-        if isLiked {
-            likeButton.setImage(
-                UIImage(
-                    named: "like_active"
-                ),
-                for: .normal
-            )
-        } else {
-            likeButton.setImage(
-                UIImage(
-                    named: "like_no_active"
-                ),
-                for: .normal
-            )
         }
     }
     
@@ -273,7 +221,6 @@ final class CollectionCell: UICollectionViewCell {
                     equalTo: starsStackView.bottomAnchor,
                     constant: 5
                 ),
-                // Нужно добавить в стек
                 
                 nameLabel.heightAnchor.constraint(
                     equalToConstant: 22
@@ -360,10 +307,13 @@ final class CollectionCell: UICollectionViewCell {
     //MARK: - Action
     
     @objc func didLikeButtonTapped() {
-        // TODO: Логика добавления в избранное
+        guard let nftId = nftId else { return }
+        didLikeTappedHandler?(nftId)
     }
     
     @objc func didCartButtonTapped() {
-        // TODO: Логика добавления в корзину
+        guard let nftId = nftId else { return }
+        didCartTappedHandler?(nftId)
     }
 }
+

@@ -22,14 +22,10 @@ final class CatalogViewController: UIViewController, LoadingView {
     
     private lazy var sortButton: UIBarButtonItem = {
         let sort = UIBarButtonItem(
-            image: UIImage(
-                named: "sort"
-            ),
+            image: UIImage(named: "sort"),
             style: .plain,
             target: self,
-            action: #selector(
-                sortMenuButton
-            )
+            action: #selector(sortMenuButton)
         )
         
         return sort
@@ -101,17 +97,12 @@ final class CatalogViewController: UIViewController, LoadingView {
     
     private func updateTableView() {
         tableView.beginUpdates()
-        tableView.reloadSections(
-            IndexSet(
-                integer: 0
-            ),
-            with: .automatic
-        )
+        tableView.reloadSections(IndexSet(integer: 0),with: .automatic)
         tableView.endUpdates()
     }
     
     // MARK: - Setup View
-
+    
     private func addElements() {
         [tableView,
          activityIndicator

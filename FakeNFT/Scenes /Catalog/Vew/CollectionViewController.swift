@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class CollectionViewController: UIViewController, LoadingView {
     
@@ -16,11 +17,8 @@ final class CollectionViewController: UIViewController, LoadingView {
     // MARK: - UI Components
     
     lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(
-            style: .medium
-        )
+        let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
         
         return indicator
     }()
@@ -39,9 +37,7 @@ final class CollectionViewController: UIViewController, LoadingView {
     
     private var nameLabel: UILabel = {
         var label = UILabel()
-        label.font = .boldSystemFont(
-            ofSize: 22
-        )
+        label.font = .boldSystemFont(ofSize: 22)
         label.textAlignment = .left
         
         return label
@@ -50,10 +46,7 @@ final class CollectionViewController: UIViewController, LoadingView {
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.text = "Автор коллекции:"
-        label.font = .systemFont(
-            ofSize: 13,
-            weight: .regular
-        )
+        label.font = .systemFont(ofSize: 13, weight: .regular)
         label.textAlignment = .left
         
         return label
@@ -62,10 +55,7 @@ final class CollectionViewController: UIViewController, LoadingView {
     private let authorLinkLabel: UILabel = {
         let label = UILabel()
         label.textColor = .ypBlue
-        label.font = .systemFont(
-            ofSize: 15,
-            weight: .regular
-        )
+        label.font = .systemFont(ofSize: 15,weight: .regular)
         label.isUserInteractionEnabled = true
         
         return label
@@ -73,10 +63,7 @@ final class CollectionViewController: UIViewController, LoadingView {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(
-            ofSize: 13,
-            weight: .regular
-        )
+        label.font = .systemFont(ofSize: 13,weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -146,17 +133,17 @@ final class CollectionViewController: UIViewController, LoadingView {
     private func bindViewModel() {
         viewModel.showLoadingHandler = { [weak self] in
             guard let self = self else { return }
-            self.showLoading()
             self.view.isUserInteractionEnabled = false
+            ProgressHUD.show()
         }
         
-        viewModel.hideLoadingHandler = { [weak self] in
+        viewModel.showSuccessHandler = { [weak self] in
             guard let self = self else { return }
-            self.hideLoading()
             self.view.isUserInteractionEnabled = true
+            ProgressHUD.showSucceed(delay: 0.5)
         }
         
-        viewModel.errorHandler = { [weak self] in
+        viewModel.showErrorHandler = { [weak self] in
             guard let self = self else { return }
             self.showErrorAlert()
         }
@@ -184,11 +171,7 @@ final class CollectionViewController: UIViewController, LoadingView {
                 handler: nil
             )
         )
-        present(
-            alert,
-            animated: true,
-            completion: nil
-        )
+        present(alert, animated: true, completion: nil)
         print(
             "Network error occurred"
         )
@@ -208,9 +191,7 @@ final class CollectionViewController: UIViewController, LoadingView {
                 imageView.kf.indicatorType = .activity
                 imageView.kf.setImage(
                     with: imageUrl,
-                    placeholder: UIImage(
-                        named: "Card.png"
-                    )
+                    placeholder: UIImage(named: "Card.png")
                 )
                 imageView.contentMode = .scaleAspectFill
                 imageView.clipsToBounds = true
@@ -233,12 +214,9 @@ final class CollectionViewController: UIViewController, LoadingView {
         let tap = UITapGestureRecognizer(
             target: self,
             action: #selector(
-                authorLinkDidTap
-            )
+                authorLinkDidTap)
         )
-        authorLinkLabel.addGestureRecognizer(
-            tap
-        )
+        authorLinkLabel.addGestureRecognizer(tap)
     }
     
     // MARK: - Setup View
@@ -252,14 +230,11 @@ final class CollectionViewController: UIViewController, LoadingView {
          nftCollectionView
         ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(
-                $0
-            )
+            view.addSubview($0)
         }
         
-        nftCollectionView.addSubview(
-            activityIndicator
-        )
+        nftCollectionView.addSubview(activityIndicator)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func layoutConstraint() {
@@ -382,13 +357,8 @@ final class CollectionViewController: UIViewController, LoadingView {
     // MARK: - Action
     
     @objc func authorLinkDidTap() {
-        let vc = AuthorWebViewController(
-            websiteLinkString: viewModel.websiteLink
-        )
-        self.navigationController?.pushViewController(
-            vc,
-            animated: true
-        )
+        let vc = AuthorWebViewController(websiteLinkString: viewModel.websiteLink)
+        self.navigationController?.pushViewController(vc,animated: true)
     }
 }
 
@@ -412,8 +382,21 @@ extension CollectionViewController: UICollectionViewDataSource {
         ) as? CollectionCell else {
             return UICollectionViewCell()
         }
+        
         cell.prepareForReuse()
         cell.configure(with: viewModel.nfts[indexPath.row])
+        
+        cell.didLikeTappedHandler = { [weak self] nftId in
+            self?.viewModel.didLikeButtonTapped(nftId: nftId) { isLiked in
+                cell.updateLikeButton(isLiked: isLiked)
+            }
+        }
+        
+        cell.didCartTappedHandler = { [weak self] nftId in
+            self?.viewModel.didCartButtonTapped(nftId: nftId) { isInCart in
+                cell.updateCartButton(isInCart: isInCart)
+            }
+        }
         
         return cell
     }
@@ -459,11 +442,24 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAt section: Int
     ) -> UIEdgeInsets {
-        return UIEdgeInsets(
-            top: 0,
-            left: 16,
-            bottom: 0,
-            right: 16
+        return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        let id = viewModel.nfts[indexPath.row].id
+        let presenter = NftDetailPresenterImpl(
+            input: NftDetailInput(id: id),
+            service: NftServiceImpl(
+                networkClient: DefaultNetworkClient(),
+                storage: NftStorageImpl()
+            )
         )
+        
+        let vc = NftDetailViewController(presenter: presenter)
+        presenter.view = vc
+        present(vc, animated: true)
     }
 }

@@ -12,11 +12,11 @@ import ProgressHUD
 
 protocol CatalogViewModelProtocol {
     var collectionsBinding: Binding<[NFTViewModel]>? { get set }
-    var collections: [NFTViewModel] { get }
-    var service: CatalogService? { get set }
-    func fetchCollections()
     var showLoadingHandler: (() -> ())? { get set }
     var hideLoadingHandler: (() -> ())? { get set }
+    var service: CatalogService? { get set }
+    var collections: [NFTViewModel] { get }
+    func fetchCollections()
     func updateSorter(newSorting: SortState)
     func sorterCollections(collectionsToSort: [NFTViewModel]) -> [NFTViewModel]
 }
@@ -43,9 +43,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
         set
     ) var collections: [NFTViewModel] = [] {
         didSet {
-            collectionsBinding?(
-                collections
-            )
+            collectionsBinding?(collections)
         }
     }
     
@@ -57,9 +55,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     
     //MARK: - Public Methods
     
-    func updateSorter(
-        newSorting: SortState
-    ) {
+    func updateSorter(newSorting: SortState) {
         sorterStorage.sorterDescriptor = newSorting.rawValue
         collections = sorterCollections(
             collectionsToSort: collections
@@ -100,9 +96,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
                     collectionsToSort: convertedCollections
                 )
                 self.hideLoadingHandler?()
-            case .failure(
-                let error
-            ):
+            case .failure(let error):
                 self.hideLoadingHandler?()
                 print(
                     "Error fetching collections: \(error)"

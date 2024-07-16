@@ -1,15 +1,15 @@
 //
-//  FetchCatalogsRequest.swift
+//  GetCartRequest.swift
 //  FakeNFT
 //
-//  Created by Антон Павлов on 02.07.2024.
+//  Created by Антон Павлов on 16.07.2024.
 //
 
 import Foundation
 
 // MARK: - Network
 
-struct FetchCatalogsRequest: NetworkRequest {
+struct GetCartRequest: NetworkRequest {
     
     // MARK: - Public Properties
     
@@ -17,8 +17,9 @@ struct FetchCatalogsRequest: NetworkRequest {
     var httpBody: String?
     
     var endpoint: URL? {
-        URL(string: "\(baseUrl)/api/v1/collections")
+        URL(string: "\(baseUrl)/api/v1/orders/1")
     }
+    
     var httpMethod: HttpMethod {
         .get
     }

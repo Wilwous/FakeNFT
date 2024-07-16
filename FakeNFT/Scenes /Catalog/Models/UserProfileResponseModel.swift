@@ -8,7 +8,6 @@
 import Foundation
 
 struct UserProfileResponseModel: Decodable {
-    let id: String
     let website: String
     let likes: [String]
 }

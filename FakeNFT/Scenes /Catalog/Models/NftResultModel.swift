@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NftDetailsResponseModel: Decodable {
+struct NftResultModel: Decodable {
     let id: String
     let name: String
     let images: [String]
