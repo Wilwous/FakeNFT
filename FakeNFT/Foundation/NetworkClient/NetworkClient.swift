@@ -118,14 +118,14 @@ struct DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
         
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = dtoEncoded
-        }
-        
         if let authToken = request.token {
             urlRequest.setValue(authToken, forHTTPHeaderField: RequestConstants.tokenKey)
+        }
+        
+        if let dto = request.dto {
+            urlRequest.setValue(RequestConstants.acceptValue, forHTTPHeaderField: RequestConstants.acceptKey)
+            urlRequest.setValue(RequestConstants.contentTypeValue, forHTTPHeaderField: RequestConstants.contentTypeKey)
+            urlRequest.httpBody = dto as? Data
         }
         
         if request.httpMethod != .get, let body = request.token {
