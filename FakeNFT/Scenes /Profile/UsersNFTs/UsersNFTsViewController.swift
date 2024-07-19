@@ -16,7 +16,7 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     private var cancellables = Set<AnyCancellable>()
     private let nftService: NftServiceCombine
     private let refreshControl = UIRefreshControl()
-
+    private var dimmingView: UIView?
 
     private let noNFTLabel: UILabel = {
         let label = UILabel()
@@ -93,6 +93,55 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
             object: nil)
     }
 
+    private func enableRightButton(_ enable: Bool) {
+        navigationItem.rightBarButtonItem?.isEnabled = enable
+    }
+
+    private func sortNFTsBy() {
+        setupDimmingView()
+        let actionSheet = UIAlertController(title: nil, message: "Сортировка", preferredStyle: .actionSheet)
+
+        let sortByPriceAction = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.removeDimmingView()
+            print("Сортировка по цене")
+        }
+
+        let sortByRatingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.removeDimmingView()
+            print("Сортировка по рейтингу")
+        }
+
+        let sortByNameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.removeDimmingView()
+            print("Сортировка по названию")
+        }
+
+        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel) { [weak self] _ in
+            self?.removeDimmingView()
+        }
+
+        actionSheet.addAction(sortByPriceAction)
+        actionSheet.addAction(sortByRatingAction)
+        actionSheet.addAction(sortByNameAction)
+        actionSheet.addAction(cancelAction)
+
+        present(actionSheet, animated: true)
+    }
+
+    private func setupDimmingView() {
+        let dimView = UIView(frame: view.bounds)
+        dimView.backgroundColor = UIColor.ypBackground
+        dimView.isUserInteractionEnabled = false
+        view.addSubview(dimView)
+        dimmingView = dimView
+    }
+
+    private func removeDimmingView() {
+        dimmingView?.removeFromSuperview()
+        dimmingView = nil
+    }
+
+
     @objc private func favoriteStatusChanged(_ notification: Notification) {
         guard let nftId = notification.object as? String else { return }
         nftsTableView.reloadData()
@@ -104,7 +153,7 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     }
 
     @objc private func rightButtonTapped() {
-        //TODO:  Действие при нажатии на правую кнопку
+        sortNFTsBy()
     }
 
     // MARK: - Setup UI
@@ -159,6 +208,7 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
 
     private func updateProfileLikes(profileId: String, likes: [String]) {
         ProgressHUD.show()
+        enableRightButton(false)
         print("Обновление лайков. Количество лайков: \(likes.count)")
 
         let params = UpdateProfileParams(profileId: profileId, likes: likes)
@@ -166,6 +216,7 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
         nftService.updateProfile(params: params)
             .sink(receiveCompletion: { completion in
                 ProgressHUD.dismiss()
+                self.enableRightButton(true)
                 switch completion {
                 case .finished:
                     print("✅ Лайки успешно обновлены")
@@ -183,11 +234,13 @@ extension UsersNFTsViewController {
     private func loadUsersNFTs(forProfileId profileId: String) {
         if !refreshControl.isRefreshing {
             ProgressHUD.show()
+            enableRightButton(false)
         }
 
         nftService.loadAllNfts(forProfileId: profileId)
             .sink(receiveCompletion: { completion in
                 ProgressHUD.dismiss()
+                self.enableRightButton(true)
                 self.refreshControl.endRefreshing()
                 switch completion {
                 case .finished:
