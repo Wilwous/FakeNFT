@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import Combine
 
 final class ProfileTableView: UITableViewController {
 
     private let iconImage = UIImage(systemName: "chevron.forward")!
-
-    var myNFTsCount = 112
-    var favoritesNFTsCount = 11
+    private let unifiedService: NftServiceCombine
+    var myNFTsCount = 0
+    var favoritesNFTsCount = 0
+    var onDeveloperCellTap: (() -> Void)?
+    private var cancellables = Set<AnyCancellable>()
 
     private var items: [(String, String?, UIImage)] {
         return [
@@ -22,13 +25,49 @@ final class ProfileTableView: UITableViewController {
         ]
     }
 
+    init(unifiedService: NftServiceCombine) {
+        self.unifiedService = unifiedService
+        super.init(style: .plain)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
         tableView.rowHeight = 54
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .ypWhiteDay
     }
+
+    private func rightToLeftTransition() {
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.type = .push
+        transition.subtype = .fromRight
+        view.window!.layer.add(transition, forKey: kCATransition)
+    }
+
+    func updateFavoritesNFTCount() {
+        unifiedService.loadProfile(id: "1")
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("⛔️ Ошибка загрузки профиля: \(error)")
+                }
+            }, receiveValue: { [weak self] profile in
+                self?.favoritesNFTsCount = profile.likes.count 
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
 
     // MARK: - Table view data source
 
@@ -47,5 +86,28 @@ final class ProfileTableView: UITableViewController {
         let item = items[indexPath.row]
         cell.configure(mainText: item.0, secondaryText: item.1, icon: item.2)
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if indexPath.row == 0 {
+            let usersNFTsVC = UsersNFTsViewController(nftService: unifiedService)
+            let navController = UINavigationController(rootViewController: usersNFTsVC)
+            navController.modalPresentationStyle = .fullScreen
+            rightToLeftTransition()
+            present(navController, animated: false, completion: nil)
+        }
+
+        if indexPath.row == 1 {
+            let usersNFTsVC = FavoritesNFTsViewController(unifiedService: unifiedService)
+            let navController = UINavigationController(rootViewController: usersNFTsVC)
+            navController.modalPresentationStyle = .fullScreen
+            rightToLeftTransition()
+            present(navController, animated: false, completion: nil)
+        }
+
+        if indexPath.row == 2 {
+            onDeveloperCellTap?()
+        }
     }
 }

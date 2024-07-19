@@ -8,9 +8,9 @@
 import UIKit
 
 final class ProfileTableViewCell: UITableViewCell {
-
+    
     //MARK: - Properties
-
+    
     static let identifier = "ProfileTableViewCell"
     
     private let mainTextLabel: UILabel = {
@@ -47,6 +47,7 @@ final class ProfileTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        contentView.backgroundColor = .ypWhiteDay
         setCellConstraints()
     }
     
@@ -55,7 +56,7 @@ final class ProfileTableViewCell: UITableViewCell {
     }
     
     //MARK: - Methods
-
+    
     private func setCellConstraints() {
         mainTextLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryTextLabel.translatesAutoresizingMaskIntoConstraints = false
