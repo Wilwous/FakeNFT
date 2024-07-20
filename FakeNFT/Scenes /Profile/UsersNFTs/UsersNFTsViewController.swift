@@ -17,7 +17,8 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     private let nftService: NftServiceCombine
     private let refreshControl = UIRefreshControl()
     private var dimmingView: UIView?
-    
+    private let sortingMethodKey = "sortingMethod"
+
     private let noNFTLabel: UILabel = {
         let label = UILabel()
         label.text = "У Вас ещё нет NFT"
@@ -50,8 +51,9 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
         setupRefreshControl()
         loadUsersNFTs(forProfileId: "1")
         setupBindings()
+        applySavedSortingMethod()
     }
-    
+
     // MARK: - Setup Navigation Bar
     
     private func setupNavigationBar() {
@@ -96,43 +98,68 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     private func enableRightButton(_ enable: Bool) {
         navigationItem.rightBarButtonItem?.isEnabled = enable
     }
-    
+
+    private func saveSortingMethod(method: String) {
+        UserDefaults.standard.set(method, forKey: sortingMethodKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    private func loadSortingMethod() -> String? {
+        return UserDefaults.standard.string(forKey: sortingMethodKey)
+    }
+
     private func sortNFTsBy() {
+        setupDimmingView()
         let actionSheet = UIAlertController(title: nil, message: "Сортировка", preferredStyle: .actionSheet)
-        
+
         let sortByPriceAction = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
             self?.nftsTableView.nfts.sort(by: { $0.price < $1.price })
             self?.nftsTableView.reloadData()
+            self?.saveSortingMethod(method: "price")
             self?.removeDimmingView()
         }
-        
+
         let sortByRatingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
             self?.nftsTableView.nfts.sort(by: { $0.rating > $1.rating })
             self?.nftsTableView.reloadData()
+            self?.saveSortingMethod(method: "rating")
             self?.removeDimmingView()
         }
-        
+
         let sortByNameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
             self?.nftsTableView.nfts.sort(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
             self?.nftsTableView.reloadData()
+            self?.saveSortingMethod(method: "name")
             self?.removeDimmingView()
         }
-        
+
         let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel) { [weak self] _ in
             self?.removeDimmingView()
         }
-        
+
         actionSheet.addAction(sortByPriceAction)
         actionSheet.addAction(sortByRatingAction)
         actionSheet.addAction(sortByNameAction)
         actionSheet.addAction(cancelAction)
-        
-        if let popoverController = actionSheet.popoverPresentationController {
-            popoverController.barButtonItem = navigationItem.rightBarButtonItem
-        }
+
         present(actionSheet, animated: true)
     }
-    
+
+    private func applySavedSortingMethod() {
+        let method = loadSortingMethod() ?? "rating"
+        switch method {
+        case "price":
+            nftsTableView.nfts.sort(by: { $0.price < $1.price })
+        case "rating":
+            nftsTableView.nfts.sort(by: { $0.rating > $1.rating })
+        case "name":
+            nftsTableView.nfts.sort(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
+        default:
+            nftsTableView.nfts.sort(by: { $0.rating > $1.rating })
+        }
+        nftsTableView.reloadData()
+    }
+
     private func setupDimmingView() {
         let dimView = UIView(frame: view.bounds)
         dimView.backgroundColor = UIColor.ypBackground
@@ -214,7 +241,30 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
             })
             .store(in: &cancellables)
     }
-    
+
+    private func loadUsersNFTs(forProfileId profileId: String) {
+        ProgressHUD.show()
+        enableRightButton(false)
+
+        nftService.loadAllNfts(forProfileId: profileId)
+            .sink(receiveCompletion: { [weak self] completion in
+                ProgressHUD.dismiss()
+                self?.enableRightButton(true)
+                self?.refreshControl.endRefreshing()
+                switch completion {
+                case .finished:
+                    self?.applySavedSortingMethod()
+                    print("✅ Загрузка всех NFT для профиля завершена успешно")
+                case .failure(let error):
+                    print("⛔️ Ошибка загрузки всех NFT для профиля: \(error)")
+                }
+            }, receiveValue: { [weak self] nfts in
+                self?.nftsTableView.nfts = nfts
+                self?.nftsTableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
     //MARK: - Objcs
     
     @objc private func refreshNFTs() {
@@ -236,32 +286,3 @@ final class UsersNFTsViewController: UIViewController, UsersNFTsTableViewCellDel
     }
 }
 
-//MARK: - Extension
-
-extension UsersNFTsViewController {
-    private func loadUsersNFTs(forProfileId profileId: String) {
-        if !refreshControl.isRefreshing {
-            ProgressHUD.show()
-            enableRightButton(false)
-        }
-        
-        nftService.loadAllNfts(forProfileId: profileId)
-            .sink(receiveCompletion: { completion in
-                ProgressHUD.dismiss()
-                self.enableRightButton(true)
-                self.refreshControl.endRefreshing()
-                switch completion {
-                case .finished:
-                    print("✅ Загрузка всех NFT для профиля завершена успешно")
-                case .failure(let error):
-                    print("⛔️ Ошибка загрузки всех NFT для профиля: \(error)")
-                }
-            }, receiveValue: { [weak self] nfts in
-                print("✅ Получены данные NFT для профиля: \(nfts)")
-                self?.nftsTableView.nfts = nfts
-                self?.nftsTableView.reloadData()
-                self?.noNFTLabel.isHidden = !(self?.nftsTableView.nfts.isEmpty ?? true)
-            })
-            .store(in: &cancellables)
-    }
-}
