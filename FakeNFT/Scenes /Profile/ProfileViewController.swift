@@ -176,7 +176,7 @@ final class ProfileViewController: UIViewController, EditProfileDelegate {
         let servicesAssembly = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
         let customServicesAssembly = CustomServicesAssembly(servicesAssembly: servicesAssembly)
 
-        guard let profileViewController = try? customServicesAssembly.createProfileViewController() else {
+        guard (try? customServicesAssembly.createProfileViewController()) != nil else {
             print("⛔️ Ошибка при создании ProfileViewController")
             return
         }
