@@ -7,6 +7,8 @@ enum HttpMethod: String {
     case delete = "DELETE"
 }
 
+// MARK: - Protocol
+
 protocol NetworkRequest {
     var endpoint: URL? { get }
     var httpMethod: HttpMethod { get }

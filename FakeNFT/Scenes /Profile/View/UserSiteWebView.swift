@@ -8,10 +8,15 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController, WKNavigationDelegate {
-    var webView: WKWebView!
-    var targetURL: String?
-    var activityIndicator: UIActivityIndicatorView!
+final class LicenceWebViewController: UIViewController {
+    
+    //MARK: - Private Properties
+    
+    private var webView: WKWebView!
+    private var targetURL: String?
+    private var activityIndicator: UIActivityIndicatorView!
+    
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,21 +25,23 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         loadRequest()
         setupNavigationBar()
     }
+    
+    // MARK: - Private Methods
 
-    func setupWebView() {
+    private func setupWebView() {
         webView = WKWebView(frame: view.bounds)
         webView.navigationDelegate = self
         view = webView
     }
 
-    func setupActivityIndicator() {
+    private func setupActivityIndicator() {
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
     }
 
-    func loadRequest() {
+    private func loadRequest() {
         guard let urlStr = targetURL, let url = URL(string: urlStr) else {
             displayErrorPage()
             return
@@ -43,25 +50,7 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         webView.load(request)
     }
 
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        activityIndicator.startAnimating()
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        activityIndicator.stopAnimating()
-    }
-
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        activityIndicator.stopAnimating()
-        displayErrorPage()
-    }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        activityIndicator.stopAnimating()
-        displayErrorPage()
-    }
-
-    func displayErrorPage() {
+    private func displayErrorPage() {
         let html = """
         <html>
         <head><title>Ошибка</title></head>
@@ -74,9 +63,14 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         webView.loadHTMLString(html, baseURL: nil)
     }
 
-    func setupNavigationBar() {
+    private func setupNavigationBar() {
         let backIcon = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: backIcon, style: .plain, target: self, action: #selector(backTapped))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: backIcon,
+            style: .plain,
+            target: self,
+            action: #selector(backTapped)
+        )
         navigationItem.leftBarButtonItem?.tintColor = .ypBlackDay
     }
 
@@ -92,5 +86,41 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     @objc func backTapped() {
         leftToRightTransition()
         dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK: - WKNavigationDelegate
+
+extension LicenceWebViewController: WKNavigationDelegate {
+    func webView(
+        _ webView: WKWebView,
+        didStartProvisionalNavigation navigation: WKNavigation!
+    ) {
+        activityIndicator.startAnimating()
+    }
+    
+    func webView(
+        _ webView: WKWebView,
+        didFinish navigation: WKNavigation!
+    ) {
+        activityIndicator.stopAnimating()
+    }
+    
+    func webView(
+        _ webView: WKWebView,
+        didFail navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        activityIndicator.stopAnimating()
+        displayErrorPage()
+    }
+    
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        activityIndicator.stopAnimating()
+        displayErrorPage()
     }
 }

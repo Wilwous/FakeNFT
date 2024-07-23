@@ -126,7 +126,7 @@ final class CollectionCell: UICollectionViewCell {
     }
     
     func updateCartButton(isInCart: Bool) {
-        let imageName = isInCart ? "item_add" : "item_delete"
+        let imageName = isInCart ? "item_delete" : "item_add"
         cartButton.setImage(UIImage(named: imageName), for: .normal)
     }
     

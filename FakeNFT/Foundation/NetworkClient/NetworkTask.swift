@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - Protocol
+
 protocol NetworkTask {
     func cancel()
 }

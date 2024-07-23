@@ -33,7 +33,6 @@ final class CollectionService {
             case .success(let nft):
                 completion(.success(nft))
             case .failure(let error):
-                print("Error in getNftById: \(error)")
                 completion(.failure(error))
             }
         }
@@ -55,7 +54,7 @@ final class CollectionService {
     }
     
     func getMyFavourites(completion: @escaping ProfileInfoResultCompletion) {
-        let request = FetchLikesRequest(token: "")
+        let request = FetchLikesRequest(token: RequestConstants.tokenValue)
         self.networkClient.send(request: request) { result in
             switch result {
             case .success(let data):
@@ -89,7 +88,8 @@ final class CollectionService {
                     newLikes.append(likeId)
                 }
                 let convertedLikes = newLikes.joined(separator: ",")
-                let request = FetchLikesRequest(token: "likes=\(convertedLikes)")
+                let tokenValue = newLikes.isEmpty ? "likes=null" : "likes=\(convertedLikes)"
+                let request = FetchLikesRequest(token: tokenValue)
                 
                 self.networkClient.send(
                     request: request,

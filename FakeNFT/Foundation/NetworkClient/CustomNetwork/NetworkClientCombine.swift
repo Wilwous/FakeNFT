@@ -9,11 +9,18 @@ import Foundation
 import Combine
 
 final class NetworkClientCombine {
+    
+    // MARK: - Private Properties
+    
     private let baseClient: DefaultNetworkClient
+    
+    // MARK: - Initializer
     
     init(baseClient: DefaultNetworkClient = DefaultNetworkClient()) {
         self.baseClient = baseClient
     }
+    
+    //MARK: - Public Methods
     
     func send<T: Decodable>(
         request: NetworkRequest,

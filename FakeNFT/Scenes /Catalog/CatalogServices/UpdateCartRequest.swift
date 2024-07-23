@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UpdateCartRequest.swift
 //  FakeNFT
 //
 //  Created by Антон Павлов on 16.07.2024.
@@ -14,7 +14,7 @@ struct UpdateCartRequest: NetworkRequest {
     // MARK: - Public Properties
     
     let baseUrl = RequestConstants.baseURL
-    var token: String?
+    var token: String? = RequestConstants.tokenValue
     
     var endpoint: URL? {
         URL(string: "\(baseUrl)/api/v1/orders/1")

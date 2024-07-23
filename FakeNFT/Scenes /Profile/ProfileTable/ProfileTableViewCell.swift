@@ -55,7 +55,20 @@ final class ProfileTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Methods
+    //MARK: - Public Methods
+    
+    func configure(mainText: String, secondaryText: String?, icon: UIImage) {
+        mainTextLabel.text = mainText
+        if let secondaryText = secondaryText {
+            secondaryTextLabel.text = secondaryText
+            secondaryTextLabel.isHidden = false
+        } else {
+            secondaryTextLabel.isHidden = true
+        }
+        iconImageView.image = icon.withRenderingMode(.alwaysTemplate)
+    }
+    
+    //MARK: - Private Methods
     
     private func setCellConstraints() {
         mainTextLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -85,16 +98,5 @@ final class ProfileTableViewCell: UITableViewCell {
             iconImageView.heightAnchor.constraint(equalToConstant: 22),
             iconImageView.widthAnchor.constraint(equalToConstant: 16)
         ])
-    }
-    
-    func configure(mainText: String, secondaryText: String?, icon: UIImage) {
-        mainTextLabel.text = mainText
-        if let secondaryText = secondaryText {
-            secondaryTextLabel.text = secondaryText
-            secondaryTextLabel.isHidden = false
-        } else {
-            secondaryTextLabel.isHidden = true
-        }
-        iconImageView.image = icon.withRenderingMode(.alwaysTemplate)
     }
 }

@@ -13,9 +13,15 @@ protocol FavoritesNFTsCollectionViewDelegate: AnyObject {
 
 final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FavoritesNFTsCollectionViewCellDelegate {
     
+    // MARK: - Delegate
+    
     weak var itemsDelegate: FavoritesNFTsCollectionViewDelegate?
     
+    // MARK: - Private Properties
+    
     private var items: [Nft]
+    
+    // MARK: - Initializer
     
     init(items: [Nft]) {
         self.items = items
@@ -29,7 +35,10 @@ final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDeleg
         
         delegate = self
         dataSource = self
-        register(FavoritesNFTsCollectionViewCell.self, forCellWithReuseIdentifier: FavoritesNFTsCollectionViewCell.identifier)
+        register(
+            FavoritesNFTsCollectionViewCell.self,
+            forCellWithReuseIdentifier: FavoritesNFTsCollectionViewCell.identifier
+        )
         backgroundColor = .clear
     }
     
@@ -37,13 +46,23 @@ final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDeleg
         fatalError("init(coder:) has not been implemented")
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    // MARK: - Public Methods
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         return items.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoritesNFTsCollectionViewCell.identifier, for: indexPath) as? FavoritesNFTsCollectionViewCell else {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: FavoritesNFTsCollectionViewCell.identifier,
+            for: indexPath
+        ) as? FavoritesNFTsCollectionViewCell else {
             return UICollectionViewCell()
         }
         
@@ -53,7 +72,11 @@ final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDeleg
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let totalSpacing = 16 + 16 + 8
         let width = (collectionView.frame.size.width - CGFloat(totalSpacing)) / 2
         return CGSize(width: width, height: 80)
@@ -71,7 +94,9 @@ final class FavoritesNFTsCollectionView: UICollectionView, UICollectionViewDeleg
         
         UserDefaults.standard.set(updatedLikes, forKey: "FavoriteNFTs")
         
-        (self.superview?.findViewController() as? FavoritesNFTsViewController)?.updateProfileLikes(profileId: "1", likes: updatedLikes)
+        (self.superview?.findViewController() as? FavoritesNFTsViewController)?.updateProfileLikes(
+            profileId: "1", likes: updatedLikes
+        )
     }
     
     func updateItems(_ newItems: [Nft]) {

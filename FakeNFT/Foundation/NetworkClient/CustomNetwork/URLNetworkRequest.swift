@@ -8,11 +8,16 @@
 import Foundation
 
 struct URLNetworkRequest: NetworkRequest {
+    
+    // MARK: - Public Properties
+    
     let endpoint: URL?
     let httpMethod: HttpMethod
     let dto: Encodable?
     let isUrlEncoded: Bool
     let token: String?
+    
+    // MARK: - Initializer
     
     init(
         endpoint: URL?,
@@ -27,6 +32,8 @@ struct URLNetworkRequest: NetworkRequest {
         self.isUrlEncoded = isUrlEncoded
         self.token = token ?? TokenManager.shared.token
     }
+    
+    //MARK: - Public Methods
     
     func update(
         endpoint: URL?
