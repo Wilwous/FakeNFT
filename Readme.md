@@ -10,7 +10,7 @@
 - [Декомпозиция Корзины - Наташа Труфанова](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Cart)%20-%20Наташа%20Труфанова.md?plain=1)
 
 ## Скринкасты эпиков:
-- Общая работа приложения: [Общий скринкаст](https://disk.yandex.ru/d/8TE7yPiz7bLaNQ)
+- Общая работа приложения: [Общий скринкаст](https://disk.yandex.ru/d/U6KTZvS0XL6fVg)
 - Профиль: [Скринкаст профиля](https://disk.yandex.ru/d/8TE7yPiz7bLaNQ)
 - Каталог: [Скринкаст каталога](https://disk.yandex.ru/d/KvWfUvqu6TLAQw)
 - Корзина: [Скринкаст корзины](https://disk.yandex.ru/d/PBgwwE4vHCPkuw)
