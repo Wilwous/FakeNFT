@@ -4,6 +4,17 @@
 
 [Дизайн Figma](https://www.figma.com/file/k1LcgXHGTHIeiCv4XuPbND/FakeNFT-(YP)?node-id=96-5542&t=YdNbOI8EcqdYmDeg-0)
 
+## Ссылки на декомпозицию:
+- [Декомпозиция Каталога - Антон Павлов](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Catalog)%20-%20Антон%20Павлов.md)
+- [Декомпозиция Профиля - Влад Горелов](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Profile)%20-%20Влад%20Горелов.md)
+- [Декомпозиция Корзины - Наташа Труфанова](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Cart)%20-%20Наташа%20Труфанова.md?plain=1)
+
+## Скринкасты эпиков:
+- Профиль: [Скринкаст профиля](https://disk.yandex.ru/d/8TE7yPiz7bLaNQ)
+- Каталог: [Скринкаст каталога](https://disk.yandex.ru/d/KvWfUvqu6TLAQw)
+- Корзина: [Скринкаст корзины](https://disk.yandex.ru/d/PBgwwE4vHCPkuw)
+- Общая работа приложения: [Общий скринкаст](https://disk.yandex.ru/d/8TE7yPiz7bLaNQ)
+
 # Назначение и цели приложения
 
 Приложение помогает пользователям просматривать и покупать NFT (Non-Fungible Token). Функционал покупки иммитируется с помощью мокового сервера.
