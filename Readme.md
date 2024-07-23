@@ -6,7 +6,7 @@
 
 ## Ссылки на декомпозицию:
 - [Декомпозиция Профиля - Влад Горелов](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Profile)%20-%20Влад%20Горелов.md)
-- - [Декомпозиция Каталога - Антон Павлов](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Catalog)%20-%20Антон%20Павлов.md)
+- [Декомпозиция Каталога - Антон Павлов](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Catalog)%20-%20Антон%20Павлов.md)
 - [Декомпозиция Корзины - Наташа Труфанова](https://github.com/Wilwous/FakeNFT/blob/develop/FakeNFT/Docs/Decomposition%20(Cart)%20-%20Наташа%20Труфанова.md?plain=1)
 
 ## Скринкасты эпиков:
