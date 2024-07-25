@@ -15,11 +15,11 @@
 					<string>Default Configuration</string>
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
 				</dict>
 			</array>
 		</dict>
 	</dict>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Мы хотим получить доступ к вашей фотогалерее для установки аватара</string>
 </dict>
 </plist>
